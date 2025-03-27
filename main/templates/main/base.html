@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Sploj{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'main/style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <a href="{% url 'whats_on' %}" class="logo">
+                <img src="{% static 'main/images/logo.png' %}" alt="Sploj Logo" class="logo-img">
+            </a>
+    
+            <button class="hamburger" onclick="toggleMenu()">☰</button>
+    
+            <div class="nav-links" id="navLinks">
+                <span class="nav-close" onclick="toggleMenu()">×</span>
+    
+                <a href="{% url 'whats_on' %}">What’s On</a>
+                <div class="dropdown">
+                    <a href="#">Projects</a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'category_view' 'radio-dyfi' %}">Radio Dyfi</a>
+                        <a href="{% url 'category_view' 'cinema' %}">Cinema</a>
+                        <a href="{% url 'category_view' 'art-gallery' %}">Art Gallery</a>
+                        <a href="{% url 'category_view' 'live-music' %}">Live Music</a>
+                        <a href="{% url 'category_view' 'dj-bar' %}">DJ Bar</a>
+                        <a href="{% url 'category_view' 'clwb-fideo' %}">Clwb Fideo</a>
+                        <a href="{% url 'category_view' 'workshops' %}">Workshops</a>
+                    </div>
+                </div>
+                <a href="{% url 'info' %}">Info</a>
+            </div>
+        </div>
+    </nav>
+    
+
+    <div class="content">
+        {% block content %}{% endblock %}
+        {% block funders %}{% endblock %}
+    </div>
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-inner">
+    
+                <!-- Social Icons Centered -->
+                <div class="footer-socials">
+                    <a href="https://www.instagram.com/splojmach/" target="_blank" aria-label="Instagram">
+                        <img src="{% static 'main/images/instagram.png' %}" alt="Instagram">
+                    </a>
+                    <a href="https://www.tiktok.com/@splojmach" target="_blank" aria-label="TikTok">
+                        <img src="{% static 'main/images/ticktock.png' %}" alt="TikTok">
+                    </a>
+                    <a href="https://www.youtube.com/channel/UCEtqhvb3QRLa2NFPVxM7XGg" target="_blank" aria-label="YouTube">
+                        <img src="{% static 'main/images/youtube.png' %}" alt="YouTube">
+                    </a>
+                    <a href="https://chat.whatsapp.com/CwqzmAqxddE1d0Qu548dfm" target="_blank" aria-label="WhatsApp">
+                        <img src="{% static 'main/images/whatsapp.png' %}" alt="WhatsApp">
+                    </a>
+                </div>
+    
+                <!-- Mailchimp Newsletter Form -->
+                <div id="mc_embed_signup">
+                    <form action="https://gmail.us19.list-manage.com/subscribe/post?u=7e366cd9853fa4d214985e801&amp;id=71e46e4b02&amp;f_id=00d901e3f0"
+                          method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form"
+                          class="validate" target="_blank" onsubmit="return handleNewsletterSubmit(event)">
+                        <div id="mc_embed_signup_scroll">
+                            <h2>Subscribe to the Sploj Newsletter</h2>
+                            <div class="mc-field-group">
+                                <label for="mce-EMAIL">Email Address <span class="asterisk">*</span></label>
+                                <input type="email" name="EMAIL" class="required email" id="mce-EMAIL" required>
+                            </div>
+                            <div class="clear">
+                                <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="button" value="Subscribe">
+                            </div>
+                            <div id="newsletter-success" style="display:none; margin-top: 20px; color: green; font-weight: bold;">
+                                Thanks for signing up to the weekly Sploj newsletter!
+                            </div>
+                        </div>
+                    </form>
+                </div>
+    
+            </div>
+        </div>
+    </footer>
+    
+    
+
+    <script>
+        function toggleMenu() {
+            const navLinks = document.getElementById("navLinks");
+            navLinks.classList.toggle("active");
+        }
+
+        function handleNewsletterSubmit(e) {
+            e.preventDefault();
+            document.getElementById('newsletter-success').style.display = 'block';
+            const form = document.getElementById('mc-embedded-subscribe-form');
+            form.querySelectorAll('input, button').forEach(el => el.style.display = 'none');
+            return false;
+        }
+    </script>
+</body>
+</html>
