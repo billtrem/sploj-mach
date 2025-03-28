@@ -55,6 +55,7 @@ TEMPLATES = [
     },
 ]
 
+# Database configuration
 DATABASES = {
     'default': dj_database_url.parse(
         config('DATABASE_URL', default='sqlite:///' + str(BASE_DIR / 'db.sqlite3')),
@@ -63,6 +64,10 @@ DATABASES = {
     )
 }
 
+# Superuser creation from environment variables
+DJANGO_SUPERUSER_USERNAME = config('DJANGO_SUPERUSER_USERNAME', default='sploj-office')
+DJANGO_SUPERUSER_EMAIL = config('DJANGO_SUPERUSER_EMAIL', default='admin@sploj.com')
+DJANGO_SUPERUSER_PASSWORD = config('DJANGO_SUPERUSER_PASSWORD', default='Machynlleth25!')
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -91,9 +96,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ✅ Secure proxy header for Railway
+# Secure proxy header for Railway
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+# Secure settings for production
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
