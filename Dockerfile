@@ -18,6 +18,9 @@ COPY . /app/
 # Collect static files before starting (optional but good)
 RUN python manage.py collectstatic --noinput
 
+# ✅ One-time admin user creation
+RUN echo "from django.contrib.auth.models import User; User.objects.filter(username='sploj-office').exists() or User.objects.create_superuser('sploj-office', 'admin@sploj.com', 'Machynlleth25!')" | python manage.py shell
+
 # Expose port for Railway
 EXPOSE 8080
 
