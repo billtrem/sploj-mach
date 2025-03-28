@@ -57,13 +57,11 @@ TEMPLATES = [
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://localhost:5432/railway',  # fallback to something PostgreSQL-compatible
+        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
         conn_max_age=600,
         ssl_require=True
     )
 }
-
-
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
