@@ -3,17 +3,15 @@ import os
 from decouple import config
 import dj_database_url
 
+# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# Security
 SECRET_KEY = config('SECRET_KEY', default='unsafe-secret-key-for-dev')
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
+ALLOWED_HOSTS = ['*']  # Consider restricting in production
 
-ALLOWED_HOSTS = ['*']  # You can restrict this to your Railway domain
-
-# Application definition
+# Installed apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -24,9 +22,10 @@ INSTALLED_APPS = [
     'main',
 ]
 
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Static file handling
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -35,8 +34,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# URL & WSGI
 ROOT_URLCONF = 'splojsite.urls'
+WSGI_APPLICATION = 'splojsite.wsgi.application'
 
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -53,14 +55,12 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'splojsite.wsgi.application'
-
-# ✅ Use Railway PostgreSQL if DATABASE_URL is set
+# ✅ Database: PostgreSQL on Railway or fallback to SQLite
 DATABASES = {
     'default': dj_database_url.config(
-        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
         conn_max_age=600,
-        ssl_require=False  # Railway PostgreSQL typically uses public connection
+        ssl_require=True
     )
 }
 
@@ -78,7 +78,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# Static files
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "main" / "static"]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -88,8 +88,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Primary key field type
+# Default primary key
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ✅ Enable secure headers for Railway
+# ✅ For Railway proxy
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
