@@ -56,12 +56,13 @@ TEMPLATES = [
 ]
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+    'default': dj_database_url.parse(
+        config('DATABASE_URL', default='sqlite:///' + str(BASE_DIR / 'db.sqlite3')),
         conn_max_age=600,
         ssl_require=True
     )
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
