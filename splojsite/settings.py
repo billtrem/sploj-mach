@@ -11,7 +11,7 @@ SECRET_KEY = config('SECRET_KEY', default='unsafe-secret-key-for-dev')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['*']  # You can restrict to your Railway domain
+ALLOWED_HOSTS = ['*']  # You can restrict this to your Railway domain
 
 # Application definition
 INSTALLED_APPS = [
@@ -26,7 +26,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For serving static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # For static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -55,10 +55,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'splojsite.wsgi.application'
 
-# Database
+# ✅ Use Railway PostgreSQL if DATABASE_URL is set
 DATABASES = {
     'default': dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+        conn_max_age=600,
+        ssl_require=False  # Railway PostgreSQL typically uses public connection
     )
 }
 
@@ -76,7 +78,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JS, etc.)
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "main" / "static"]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -86,8 +88,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Default primary key field type
+# Primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Add this if you're behind a proxy like Railway:
+# ✅ Enable secure headers for Railway
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
