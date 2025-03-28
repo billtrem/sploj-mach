@@ -58,11 +58,12 @@ TEMPLATES = [
 # Database configuration
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL', default='postgresql://user:password@localhost:5432/dbname'),
+        default=config('DATABASE_URL', default='postgresql://postgres:cwmPLSkrTgRCQFTOGnIugKsnFBlkuprl@postgres.railway.internal:5432/railway'),
         conn_max_age=600,
-        ssl_require=True  # Add ssl_require to ensure SSL is used for production connections
+        ssl_require=True  # Ensure SSL is used for production connections
     )
 }
+
 
 # Superuser creation from environment variables
 DJANGO_SUPERUSER_USERNAME = config('DJANGO_SUPERUSER_USERNAME', default='sploj-office')
