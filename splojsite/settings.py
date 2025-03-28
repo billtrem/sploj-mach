@@ -8,8 +8,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security
 SECRET_KEY = config('SECRET_KEY', default='unsafe-secret-key-for-dev')
-DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = ['*']  # Consider restricting in production
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = ['*']  # You can restrict this later to your domain
 
 # Installed apps
 INSTALLED_APPS = [
@@ -25,7 +25,7 @@ INSTALLED_APPS = [
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Static file handling
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serve static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -34,7 +34,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# URL & WSGI
+# URL and WSGI
 ROOT_URLCONF = 'splojsite.urls'
 WSGI_APPLICATION = 'splojsite.wsgi.application'
 
@@ -55,10 +55,10 @@ TEMPLATES = [
     },
 ]
 
-# ✅ Database: PostgreSQL on Railway or fallback to SQLite
+# ✅ Database configuration
 DATABASES = {
     'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
         conn_max_age=600,
         ssl_require=True
     )
@@ -88,8 +88,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Default primary key
+# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ✅ For Railway proxy
+# ✅ Secure proxy header for Railway
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
