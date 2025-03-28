@@ -108,5 +108,5 @@ CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = [
     'https://www.sploj.com',
     'https://sploj.com',
-    'https://yourapp.up.railway.app',  # Add your Railway or production URL here
+    'https://web-production-33eb.up.railway.app',  # Add your Railway or production URL here
 ]
