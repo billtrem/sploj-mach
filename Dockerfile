@@ -15,14 +15,11 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copy project files
 COPY . /app/
 
-# Collect static files before starting (optional but good)
+# Collect static files
 RUN python manage.py collectstatic --noinput
-
-# ✅ One-time admin user creation
-RUN echo "from django.contrib.auth.models import User; User.objects.filter(username='sploj-office').exists() or User.objects.create_superuser('sploj-office', 'admin@sploj.com', 'Machynlleth25!')" | python manage.py shell
 
 # Expose port for Railway
 EXPOSE 8080
 
-# Start Gunicorn server on Railway-compatible port
-CMD ["gunicorn", "splojsite.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "4"]
+# ✅ Run migrations, create superuser, and start server on container start
+CMD bash -c "python manage.py migrate --noinput && python manage.py collectstatic --noinput && echo \"from django.contrib.auth.models import User; User.objects.filter(username='sploj-office').exists() or User.objects.create_superuser('sploj-office', 'admin@sploj.com', 'Machynlleth25!')\" | python manage.py shell && gunicorn splojsite.wsgi:application --bind 0.0.0.0:8080 --workers 4"
