@@ -18,12 +18,11 @@ COPY . /app/
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
-# ✅ Run migrations, create superuser, and start server
 CMD bash -c "python manage.py migrate --noinput && python manage.py collectstatic --noinput && \
-  echo \"from django.contrib.auth.models import User; \
-  User.objects.filter(username=os.getenv('DJANGO_SUPERUSER_USERNAME')).exists() or \
-  User.objects.create_superuser(username=os.getenv('DJANGO_SUPERUSER_USERNAME'), \
-  email=os.getenv('DJANGO_SUPERUSER_EMAIL'), \
-  password=os.getenv('DJANGO_SUPERUSER_PASSWORD'))\" \
-  | python manage.py shell && \
-  gunicorn splojsite.wsgi:application --bind 0.0.0.0:8080 --workers 4"
+echo \"from django.contrib.auth.models import User; import os; \
+User.objects.filter(username=os.getenv('DJANGO_SUPERUSER_USERNAME')).exists() or \
+User.objects.create_superuser(username=os.getenv('DJANGO_SUPERUSER_USERNAME'), \
+email=os.getenv('DJANGO_SUPERUSER_EMAIL'), \
+password=os.getenv('DJANGO_SUPERUSER_PASSWORD'))\" \
+| python manage.py shell && \
+gunicorn splojsite.wsgi:application --bind 0.0.0.0:8080 --workers 4"
