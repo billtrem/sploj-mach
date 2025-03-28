@@ -57,10 +57,10 @@ TEMPLATES = [
 
 # Database configuration
 DATABASES = {
-    'default': dj_database_url.parse(
-        config('DATABASE_URL', default='sqlite:///' + str(BASE_DIR / 'db.sqlite3')),
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL', default='postgresql://user:password@localhost:5432/dbname'),
         conn_max_age=600,
-        ssl_require=True
+        ssl_require=True  # Add ssl_require to ensure SSL is used for production connections
     )
 }
 
