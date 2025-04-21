@@ -20,15 +20,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'storages',  # Added for Wasabi/S3 support
 ]
 
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serve static files in production
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',  # CSRF middleware enabled
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -55,15 +56,14 @@ TEMPLATES = [
     },
 ]
 
-# Database configuration
+# Database
 DATABASES = {
     'default': dj_database_url.config(
         default=config('DATABASE_URL', default='postgresql://postgres:cwmPLSkrTgRCQFTOGnIugKsnFBlkuprl@postgres.railway.internal:5432/railway'),
         conn_max_age=600,
-        ssl_require=True  # Ensure SSL is used for production connections
+        ssl_require=True
     )
 }
-
 
 # Superuser creation from environment variables
 DJANGO_SUPERUSER_USERNAME = config('DJANGO_SUPERUSER_USERNAME', default='sploj-office')
@@ -84,30 +84,34 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+# Static files (CSS, JS)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "main" / "static"]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media files
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Media files (Wasabi S3)
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = 'sploj-media'
+AWS_S3_ENDPOINT_URL = 'https://s3.eu-west-1.wasabisys.com'
+AWS_S3_REGION_NAME = 'eu-west-1'
+AWS_QUERYSTRING_AUTH = False
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.eu-west-1.wasabisys.com/'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Secure proxy header for Railway
+# Railway/production-specific security settings
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-# Secure settings for production
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-# CSRF Trusted Origins for production (add your domains here)
+# CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
     'https://www.sploj.com',
     'https://sploj.com',
-    'https://web-production-33eb.up.railway.app',  # Add your Railway or production URL here
+    'https://web-production-33eb.up.railway.app',
 ]
