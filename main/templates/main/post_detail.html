@@ -5,8 +5,8 @@
 {% block content %}
     <h1>{{ post.title }}</h1>
 
-    {% if post.image %}
-        <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 100%; height: auto; margin-bottom: 20px;">
+    {% if post.image_url %}
+        <img src="{{ post.image_url }}" alt="{{ post.title }}" style="max-width: 100%; height: auto; margin-bottom: 20px;">
     {% endif %}
 
     <div>{{ post.content|linebreaks }}</div>

@@ -14,8 +14,6 @@
         <p>{{ info_page.mission_text|linebreaks }}</p>
     {% endif %}
 
-
-
     <h2>Location</h2>
     <p>{{ info_page.location }}</p>
 
@@ -32,7 +30,7 @@
             {% for member in info_page.team_members.all %}
                 <div class="team-member">
                     {% if member.photo %}
-                        <img src="{{ member.photo.url }}" alt="{{ member.name }}">
+                        <img src="{% url 'get_presigned_url' key=member.photo.name %}" alt="{{ member.name }}">
                     {% endif %}
                     <h4 class="name">{{ member.name }}</h4>
                     {% if member.job_title %}
@@ -48,18 +46,19 @@
         <h2>Support</h2>
         <p>{{ info_page.support_text|linebreaks }}</p>
     {% endif %}
+
     <h2>Contact Us</h2>
     <form class="contact-form">
         <div class="form-group">
             <label for="name">Your Name</label>
             <input type="text" id="name" name="name" required>
         </div>
-    
+
         <div class="form-group">
             <label for="email">Your Email</label>
             <input type="email" id="email" name="email" required>
         </div>
-    
+
         <div class="form-group">
             <label for="topic">Topic</label>
             <select id="topic" name="topic" required>
@@ -69,16 +68,14 @@
                 <option value="Other">Other</option>
             </select>
         </div>
-    
+
         <div class="form-group">
             <label for="message">Your Message</label>
             <textarea id="message" name="message" rows="5" required></textarea>
         </div>
-    
+
         <button type="submit" class="button">Send Message</button>
     </form>
-    
-
 {% endblock %}
 
 {% block funders %}
@@ -88,7 +85,7 @@
             <div class="funder-logos">
                 {% for funder in funders %}
                     {% if funder.show_on_info_page and funder.logo %}
-                        <img src="{{ funder.logo.url }}" alt="{{ funder.name }}" class="funder-logo">
+                        <img src="{% url 'get_presigned_url' key=funder.logo.name %}" alt="{{ funder.name }}" class="funder-logo">
                     {% endif %}
                 {% endfor %}
             </div>

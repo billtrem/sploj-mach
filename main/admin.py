@@ -1,12 +1,13 @@
 from django.contrib import admin
 from .models import Post, ProjectCategory, InfoPage, Funder, TeamMember
 
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'created_at', 'display_categories')
     list_filter = ('categories', 'created_at')
     search_fields = ('title', 'content')
-    prepopulated_fields = {'slug': ('title',)}  # auto-fill slug from title
+    prepopulated_fields = {'slug': ('title',)}  # Auto-generate slug
 
     def display_categories(self, obj):
         return ", ".join([cat.name for cat in obj.categories.all()])
@@ -16,6 +17,7 @@ class PostAdmin(admin.ModelAdmin):
 class TeamMemberInline(admin.TabularInline):
     model = TeamMember
     extra = 1
+    show_change_link = True
 
 
 @admin.register(ProjectCategory)
@@ -28,6 +30,7 @@ class ProjectCategoryAdmin(admin.ModelAdmin):
 @admin.register(InfoPage)
 class InfoPageAdmin(admin.ModelAdmin):
     list_display = ('location',)
+    inlines = [TeamMemberInline]
 
 
 @admin.register(Funder)
@@ -35,10 +38,16 @@ class FunderAdmin(admin.ModelAdmin):
     list_display = ('name', 'show_on_info_page')
     list_filter = ('show_on_info_page',)
     filter_horizontal = ('project_categories',)
+    search_fields = ('name',)
 
 
 @admin.register(TeamMember)
 class TeamMemberAdmin(admin.ModelAdmin):
-    list_display = ('name', 'job_title', 'project_category')  # Show 'project_category' instead of 'category'
-    list_filter = ('project_category',)  # Use 'project_category' for filtering
-    search_fields = ('name', 'job_title', 'description', 'project_category__name')  # Allow search on category name
+    list_display = ('name', 'job_title', 'project_category')
+    list_filter = ('project_category',)
+    search_fields = (
+        'name',
+        'job_title',
+        'description',
+        'project_category__name',
+    )

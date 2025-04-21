@@ -8,7 +8,11 @@ class ProjectCategory(models.Model):
     signup_link = models.URLField(blank=True, null=True)
     video_embed_code = models.TextField(blank=True)
     photo = models.ImageField(upload_to='project_photos/', blank=True, null=True)
-    color = models.CharField(max_length=7, default='#000000', help_text='Hex color code for this category, e.g. #FF5733')
+    color = models.CharField(
+        max_length=7,
+        default='#000000',
+        help_text='Hex color code for this category, e.g. #FF5733'
+    )
 
     def __str__(self):
         return self.name
@@ -27,8 +31,16 @@ class Post(models.Model):
     image = models.ImageField(upload_to='posts/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     categories = models.ManyToManyField('ProjectCategory', related_name='posts')
-    link = models.URLField(blank=True, help_text="External link (e.g., SumUp, Eventbrite, Google Form)")
-    link_label = models.CharField(max_length=20, choices=LINK_LABEL_CHOICES, blank=True, help_text="Button label for the link")
+    link = models.URLField(
+        blank=True,
+        help_text="External link (e.g., SumUp, Eventbrite, Google Form)"
+    )
+    link_label = models.CharField(
+        max_length=20,
+        choices=LINK_LABEL_CHOICES,
+        blank=True,
+        help_text="Button label for the link"
+    )
 
     def save(self, *args, **kwargs):
         if not self.slug:

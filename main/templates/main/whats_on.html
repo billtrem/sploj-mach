@@ -17,9 +17,9 @@
                 {% endfor %}
             {% endif %}
 
-            {% if post.image %}
+            {% if post.image_url %}
                 <img 
-                    src="{% url 'get_presigned_url' key=post.image.name %}" 
+                    src="{{ post.image_url }}" 
                     alt="{{ post.title }}" 
                     class="post-image"
                     loading="lazy">
