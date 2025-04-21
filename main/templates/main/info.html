@@ -3,79 +3,79 @@
 {% block title %}Info – Sploj{% endblock %}
 
 {% block content %}
-    <h1>Info</h1>
+<h1>Info</h1>
 
-    {% if info_page.welcome_message %}
-        <p>{{ info_page.welcome_message|linebreaks }}</p>
-    {% endif %}
+{% if info_page.welcome_message %}
+    <p>{{ info_page.welcome_message|linebreaks }}</p>
+{% endif %}
 
-    {% if info_page.mission_text %}
-        <h2>Mission</h2>
-        <p>{{ info_page.mission_text|linebreaks }}</p>
-    {% endif %}
+{% if info_page.mission_text %}
+    <h2>Mission</h2>
+    <p>{{ info_page.mission_text|linebreaks }}</p>
+{% endif %}
 
-    <h2>Location</h2>
-    <p>{{ info_page.location }}</p>
+<h2>Location</h2>
+<p>{{ info_page.location }}</p>
 
-    <h2>Opening Hours</h2>
-    <ul>
-        {% for line in info_page.opening_hours.splitlines %}
-            <li>{{ line }}</li>
+<h2>Opening Hours</h2>
+<ul>
+    {% for line in info_page.opening_hours.splitlines %}
+        <li>{{ line }}</li>
+    {% endfor %}
+</ul>
+
+{% if info_page.team_members.exists %}
+    <h2>Team</h2>
+    <div class="team-section">
+        {% for member in info_page.team_members.all %}
+            <div class="team-member">
+                {% if member.photo %}
+                    <img src="{% url 'get_presigned_url' key=member.photo.name %}" alt="{{ member.name }}">
+                {% endif %}
+                <h4 class="name">{{ member.name }}</h4>
+                {% if member.job_title %}
+                    <p class="job-title">{{ member.job_title }}</p>
+                {% endif %}
+                <p class="description">{{ member.description }}</p>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
+{% endif %}
 
-    {% if info_page.team_members.exists %}
-        <h2>Team</h2>
-        <div class="team-section">
-            {% for member in info_page.team_members.all %}
-                <div class="team-member">
-                    {% if member.photo %}
-                        <img src="{% url 'get_presigned_url' key=member.photo.name %}" alt="{{ member.name }}">
-                    {% endif %}
-                    <h4 class="name">{{ member.name }}</h4>
-                    {% if member.job_title %}
-                        <p class="job-title">{{ member.job_title }}</p>
-                    {% endif %}
-                    <p class="description">{{ member.description }}</p>
-                </div>
+{% if info_page.support_text %}
+    <h2>Support</h2>
+    <p>{{ info_page.support_text|linebreaks }}</p>
+{% endif %}
+
+<h2>Contact Us</h2>
+<form class="contact-form">
+    <div class="form-group">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="email">Your Email</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+
+    <div class="form-group">
+        <label for="topic">Topic</label>
+        <select id="topic" name="topic" required>
+            {% for category in categories %}
+                <option value="{{ category.name }}">{{ category.name }}</option>
             {% endfor %}
-        </div>
-    {% endif %}
+            <option value="Other">Other</option>
+        </select>
+    </div>
 
-    {% if info_page.support_text %}
-        <h2>Support</h2>
-        <p>{{ info_page.support_text|linebreaks }}</p>
-    {% endif %}
+    <div class="form-group">
+        <label for="message">Your Message</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+    </div>
 
-    <h2>Contact Us</h2>
-    <form class="contact-form">
-        <div class="form-group">
-            <label for="name">Your Name</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-
-        <div class="form-group">
-            <label for="email">Your Email</label>
-            <input type="email" id="email" name="email" required>
-        </div>
-
-        <div class="form-group">
-            <label for="topic">Topic</label>
-            <select id="topic" name="topic" required>
-                {% for category in categories %}
-                    <option value="{{ category.name }}">{{ category.name }}</option>
-                {% endfor %}
-                <option value="Other">Other</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="message">Your Message</label>
-            <textarea id="message" name="message" rows="5" required></textarea>
-        </div>
-
-        <button type="submit" class="button">Send Message</button>
-    </form>
+    <button type="submit" class="button">Send Message</button>
+</form>
 {% endblock %}
 
 {% block funders %}

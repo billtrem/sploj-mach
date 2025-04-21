@@ -9,9 +9,8 @@
 <body>
     <nav>
         <div class="nav-wrapper">
-            {% url 'get_presigned_url' key='main/images/logo.png' as logo_url %}
             <a href="{% url 'whats_on' %}" class="logo">
-                <img src="{{ logo_url }}" alt="Sploj Logo" class="logo-img">
+                <img src="{% url 'get_presigned_url' key='main/images/logo.png' %}" alt="Sploj Logo" class="logo-img">
             </a>
 
             <button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -45,28 +44,21 @@
     <footer class="site-footer">
         <div class="container">
             <div class="footer-inner">
-                <!-- Social Icons Centered -->
                 <div class="footer-socials">
-                    {% url 'get_presigned_url' key='main/images/instagram.png' as instagram_icon %}
-                    {% url 'get_presigned_url' key='main/images/ticktock.png' as tiktok_icon %}
-                    {% url 'get_presigned_url' key='main/images/youtube.png' as youtube_icon %}
-                    {% url 'get_presigned_url' key='main/images/whatsapp.png' as whatsapp_icon %}
-
                     <a href="https://www.instagram.com/splojmach/" target="_blank" aria-label="Instagram">
-                        <img src="{{ instagram_icon }}" alt="Instagram">
+                        <img src="{% url 'get_presigned_url' key='main/images/instagram.png' %}" alt="Instagram">
                     </a>
                     <a href="https://www.tiktok.com/@splojmach" target="_blank" aria-label="TikTok">
-                        <img src="{{ tiktok_icon }}" alt="TikTok">
+                        <img src="{% url 'get_presigned_url' key='main/images/ticktock.png' %}" alt="TikTok">
                     </a>
                     <a href="https://www.youtube.com/channel/UCEtqhvb3QRLa2NFPVxM7XGg" target="_blank" aria-label="YouTube">
-                        <img src="{{ youtube_icon }}" alt="YouTube">
+                        <img src="{% url 'get_presigned_url' key='main/images/youtube.png' %}" alt="YouTube">
                     </a>
                     <a href="https://chat.whatsapp.com/CwqzmAqxddE1d0Qu548dfm" target="_blank" aria-label="WhatsApp">
-                        <img src="{{ whatsapp_icon }}" alt="WhatsApp">
+                        <img src="{% url 'get_presigned_url' key='main/images/whatsapp.png' %}" alt="WhatsApp">
                     </a>
                 </div>
 
-                <!-- Mailchimp Newsletter Form -->
                 <div id="mc_embed_signup">
                     <form action="https://gmail.us19.list-manage.com/subscribe/post?u=7e366cd9853fa4d214985e801&amp;id=71e46e4b02&amp;f_id=00d901e3f0"
                           method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form"

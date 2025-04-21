@@ -3,29 +3,24 @@
 {% block title %}{{ post.title }} – Sploj{% endblock %}
 
 {% block content %}
-    <h1>{{ post.title }}</h1>
+<h1>{{ post.title }}</h1>
 
-    {% if post.image_url %}
-        <img src="{{ post.image_url }}" alt="{{ post.title }}" style="max-width: 100%; height: auto; margin-bottom: 20px;">
-    {% endif %}
+{% if post.image %}
+    <img src="{% url 'get_presigned_url' key=post.image.name %}" alt="{{ post.title }}" style="max-width: 100%; height: auto; margin-bottom: 20px;">
+{% endif %}
 
-    <div>{{ post.content|linebreaks }}</div>
+<div>{{ post.content|linebreaks }}</div>
 
-    {% if post.link %}
-        <p style="margin-top: 20px;">
-            <a href="{{ post.link }}" target="_blank" style="background-color: #333; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;">
-                {% if post.link_label == 'book' %}
-                    Book Now
-                {% elif post.link_label == 'signup' %}
-                    Sign Up
-                {% elif post.link_label == 'learn' %}
-                    Learn More
-                {% else %}
-                    Visit Link
-                {% endif %}
-            </a>
-        </p>
-    {% endif %}
+{% if post.link %}
+    <p style="margin-top: 20px;">
+        <a href="{{ post.link }}" target="_blank" style="background-color: #333; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;">
+            {% if post.link_label == 'book' %}Book Now
+            {% elif post.link_label == 'signup' %}Sign Up
+            {% elif post.link_label == 'learn' %}Learn More
+            {% else %}Visit Link{% endif %}
+        </a>
+    </p>
+{% endif %}
 
-    <p><small>Posted on {{ post.created_at|date:"F j, Y" }}</small></p>
+<p><small>Posted on {{ post.created_at|date:"F j, Y" }}</small></p>
 {% endblock %}

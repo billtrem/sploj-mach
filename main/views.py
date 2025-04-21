@@ -17,12 +17,11 @@ def get_presigned_url_for_key(key):
         region_name=settings.AWS_S3_REGION_NAME,
     )
     try:
-        url = s3.generate_presigned_url(
+        return s3.generate_presigned_url(
             ClientMethod='get_object',
             Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': key},
-            ExpiresIn=3600
+            ExpiresIn=3600  # 1 hour
         )
-        return url
     except Exception:
         return ''
 
@@ -45,14 +44,14 @@ def category_view(request, category_slug):
             if member.photo:
                 member.photo_url = get_presigned_url_for_key(member.photo.name)
 
-    for funder in category.funders.all():
-        if funder.logo:
-            funder.logo_url = get_presigned_url_for_key(funder.logo.name)
-
     posts = Post.objects.filter(categories=category).order_by('-created_at')
     for post in posts:
         if post.image:
             post.image_url = get_presigned_url_for_key(post.image.name)
+
+    for funder in category.funders.all():
+        if funder.logo:
+            funder.logo_url = get_presigned_url_for_key(funder.logo.name)
 
     return render(request, 'main/category_view.html', {
         'category': category,
