@@ -3,32 +3,50 @@
 {% block title %}What’s On – Sploj{% endblock %}
 
 {% block content %}
-    <h1>What’s On</h1>
+<h1>What’s On</h1>
 
-    {% for post in posts %}
-        <div class="post">
-            <h2>{{ post.title }}</h2>
+{% for post in posts %}
+    <div class="post" data-image-key="{{ post.image.name }}">
+        <h2>{{ post.title }}</h2>
 
-            {% if post.categories.all %}
-                {% for category in post.categories.all %}
-                    <span class="category-label" style="background-color: {{ category.color }};">
-                        {{ category.name }}
-                    </span>
-                {% endfor %}
-            {% endif %}
+        {% if post.categories.all %}
+            {% for category in post.categories.all %}
+                <span class="category-label" style="background-color: {{ category.color }};">
+                    {{ category.name }}
+                </span>
+            {% endfor %}
+        {% endif %}
 
-            {% if post.image %}
-                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-image">
-            {% endif %}
+        {% if post.image %}
+            <img id="image-{{ forloop.counter }}" src="" alt="{{ post.title }}" class="post-image" />
+        {% endif %}
 
-            <p>{{ post.content|truncatechars:250 }}</p>
+        <p>{{ post.content|truncatechars:250 }}</p>
 
-            <a href="{% url 'post_detail' post.slug %}" class="button">Read more</a>
+        <a href="{% url 'post_detail' post.slug %}" class="button">Read more</a>
 
-            <p><small>Posted on {{ post.created_at|date:"F j, Y" }}</small></p>
-        </div>
-        <hr>
-    {% empty %}
-        <p>No posts yet. Check back soon!</p>
-    {% endfor %}
+        <p><small>Posted on {{ post.created_at|date:"F j, Y" }}</small></p>
+    </div>
+    <hr>
+{% empty %}
+    <p>No posts yet. Check back soon!</p>
+{% endfor %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const posts = document.querySelectorAll('.post');
+    posts.forEach((post, index) => {
+        const key = post.dataset.imageKey;
+        if (key) {
+            fetch(`/media-url/${key}`)
+                .then(res => res.json())
+                .then(data => {
+                    const img = document.getElementById(`image-${index + 1}`);
+                    if (img) img.src = data.url;
+                })
+                .catch(err => console.error('Image load failed:', err));
+        }
+    });
+});
+</script>
 {% endblock %}
