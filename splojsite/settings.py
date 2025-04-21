@@ -1,14 +1,13 @@
 from pathlib import Path
 import os
-from decouple import config, UndefinedValueError
 import dj_database_url
 
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security
-SECRET_KEY = config('SECRET_KEY', default='unsafe-secret-key-for-dev')
-DEBUG = config('DEBUG', default=False, cast=bool)
+SECRET_KEY = 'django-insecure-7r@%=2n!8k$+1bmzjw6b@a$3xsmq&1'  # already set in Railway
+DEBUG = False
 ALLOWED_HOSTS = ['sploj.com', 'www.sploj.com', 'web-production-33eb.up.railway.app']
 
 # Applications
@@ -26,7 +25,7 @@ INSTALLED_APPS = [
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For optimized static file serving
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -35,7 +34,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# URL and WSGI
+# URLs
 ROOT_URLCONF = 'splojsite.urls'
 WSGI_APPLICATION = 'splojsite.wsgi.application'
 
@@ -59,16 +58,16 @@ TEMPLATES = [
 # Database
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL'),
+        default='postgresql://postgres:cwmPLSkrTgRCQFTOGnIugKsnFBlkuprl@postgres.railway.internal:5432/railway',
         conn_max_age=600,
-        ssl_require=True
+        ssl_require=True,
     )
 }
 
-# Superuser creation (optional, for Railway automation)
-DJANGO_SUPERUSER_USERNAME = config('DJANGO_SUPERUSER_USERNAME', default='sploj-office')
-DJANGO_SUPERUSER_EMAIL = config('DJANGO_SUPERUSER_EMAIL', default='admin@sploj.com')
-DJANGO_SUPERUSER_PASSWORD = config('DJANGO_SUPERUSER_PASSWORD', default='Machynlleth25!')
+# Superuser (for automation)
+DJANGO_SUPERUSER_USERNAME = 'sploj-office'
+DJANGO_SUPERUSER_EMAIL = 'admin@sploj.com'
+DJANGO_SUPERUSER_PASSWORD = 'Machynlleth25!'
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -82,51 +81,45 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 
-# Static files (for CSS/JS/images)
+# Static files
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "main" / "static"]
+STATICFILES_DIRS = [BASE_DIR / 'main' / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media files (Wasabi S3)
+# Wasabi S3 Media Settings
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-try:
-    AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-except UndefinedValueError:
-    AWS_ACCESS_KEY_ID = 'dummy-key'
-    AWS_SECRET_ACCESS_KEY = 'dummy-secret'
-
+AWS_ACCESS_KEY_ID = 'GOLQC658QR43JVI7ANCA'
+AWS_SECRET_ACCESS_KEY = 'lllCW4f5zCW3TSSmDXWDR6tg15l1Bp8jOnoDVhA0'
 AWS_STORAGE_BUCKET_NAME = 'sploj-media'
 AWS_S3_ENDPOINT_URL = 'https://s3.eu-west-1.wasabisys.com'
 AWS_S3_REGION_NAME = 'eu-west-1'
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
-AWS_QUERYSTRING_AUTH = False  # You’re using pre-signed URLs instead
+AWS_QUERYSTRING_AUTH = False  # We're using pre-signed URLs
 MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.eu-west-1.wasabisys.com/'
 
-# Default auto field
+# Default PK type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Security for production
+# Security Headers
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 X_FRAME_OPTIONS = 'DENY'
 
-# CORS / CSRF
+# CSRF
 CSRF_TRUSTED_ORIGINS = [
-    'https://www.sploj.com',
     'https://sploj.com',
+    'https://www.sploj.com',
     'https://web-production-33eb.up.railway.app',
 ]
 
-# Logging (basic)
+# Basic Logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
