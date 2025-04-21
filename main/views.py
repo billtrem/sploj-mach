@@ -5,8 +5,8 @@ from django.http import JsonResponse, Http404
 from django.views.decorators.http import require_GET
 import boto3
 
-
 def get_presigned_url_for_key(key):
+    """Generates a presigned URL for a given S3 object key."""
     if not key:
         return ''
     s3 = boto3.client(
@@ -20,49 +20,50 @@ def get_presigned_url_for_key(key):
         return s3.generate_presigned_url(
             ClientMethod='get_object',
             Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': key},
-            ExpiresIn=3600  # 1 hour
+            ExpiresIn=3600  # 1 hour expiration
         )
     except Exception:
         return ''
 
-
 def whats_on(request):
+    """View for listing posts with presigned URLs for images."""
     posts = Post.objects.order_by('-created_at')
     for post in posts:
         if post.image:
             post.image_url = get_presigned_url_for_key(post.image.name)
     return render(request, 'main/whats_on.html', {'posts': posts})
 
-
 def category_view(request, category_slug):
+    """View for displaying posts within a category with presigned URLs."""
     category = get_object_or_404(ProjectCategory, name__iexact=category_slug.replace('-', ' '))
+
     if category.photo:
         category.photo_url = get_presigned_url_for_key(category.photo.name)
 
-    if category.team_members.exists():
-        for member in category.team_members.all():
-            if member.photo:
-                member.photo_url = get_presigned_url_for_key(member.photo.name)
+    for member in category.team_members.all():
+        if member.photo:
+            member.photo_url = get_presigned_url_for_key(member.photo.name)
+
+    for funder in category.funders.all():
+        if funder.logo:
+            funder.logo_url = get_presigned_url_for_key(funder.logo.name)
 
     posts = Post.objects.filter(categories=category).order_by('-created_at')
     for post in posts:
         if post.image:
             post.image_url = get_presigned_url_for_key(post.image.name)
 
-    for funder in category.funders.all():
-        if funder.logo:
-            funder.logo_url = get_presigned_url_for_key(funder.logo.name)
-
     return render(request, 'main/category_view.html', {
         'category': category,
         'posts': posts,
     })
 
-
 def info(request):
+    """View for displaying the Info page, team, categories, and funders with presigned URLs."""
     info_page = InfoPage.objects.first()
     funders = Funder.objects.all()
     team_members = TeamMember.objects.filter(info_page=info_page)
+    categories = ProjectCategory.objects.all()
 
     for member in team_members:
         if member.photo:
@@ -72,7 +73,9 @@ def info(request):
         if funder.logo:
             funder.logo_url = get_presigned_url_for_key(funder.logo.name)
 
-    categories = ProjectCategory.objects.all()
+    for category in categories:
+        if category.photo:
+            category.photo_url = get_presigned_url_for_key(category.photo.name)
 
     return render(request, 'main/info.html', {
         'info_page': info_page,
@@ -81,16 +84,16 @@ def info(request):
         'team_members': team_members,
     })
 
-
 def post_detail(request, slug):
+    """View for displaying a single post with a presigned URL for the image."""
     post = get_object_or_404(Post, slug=slug)
     if post.image:
         post.image_url = get_presigned_url_for_key(post.image.name)
     return render(request, 'main/post_detail.html', {'post': post})
 
-
 @require_GET
 def get_presigned_url(request, key):
+    """View for generating a presigned URL for the requested file."""
     url = get_presigned_url_for_key(key)
     if url:
         return JsonResponse({'url': url})

@@ -18,7 +18,7 @@
         {% endif %}
 
         {% if post.image %}
-            <img src="{% url 'get_presigned_url' key=post.image.name %}" alt="{{ post.title }}" class="post-image" loading="lazy">
+            <img src="{{ post.image_url }}" alt="{{ post.title }}" style="max-width: 100%; height: auto; margin-bottom: 10px;">
         {% endif %}
 
         <p>{{ post.content|truncatechars:250 }}</p>
