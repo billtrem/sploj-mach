@@ -17,8 +17,10 @@
             {% endfor %}
         {% endif %}
 
-        {% if post.image %}
+        {% if post.image_url %}
             <img src="{{ post.image_url }}" alt="{{ post.title }}" style="max-width: 100%; height: auto; margin-bottom: 10px;">
+        {% else %}
+            <p style="color: red;"><strong>❌ Image missing or URL not generated</strong></p>
         {% endif %}
 
         <p>{{ post.content|truncatechars:250 }}</p>
