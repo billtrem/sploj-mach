@@ -1,16 +1,26 @@
 from pathlib import Path
 import os
 import dj_database_url
+from dotenv import load_dotenv
 
-# Base directory
+# Load .env for secrets (recommended for local dev)
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # Security
-SECRET_KEY = 'django-insecure-7r@%=2n!8k$+1bmzjw6b@a$3xsmq&1'
-DEBUG = False
-ALLOWED_HOSTS = ['sploj.com', 'www.sploj.com', 'web-production-33eb.up.railway.app']
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-secret-key')
+DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
-# Applications
+if DEBUG:
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+else:
+    ALLOWED_HOSTS = [
+        'sploj.com',
+        'www.sploj.com',
+        'web-production-33eb.up.railway.app',
+    ]
+
+# Installed apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -19,7 +29,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
-    # 'storages',  # no longer needed if not using Wasabi
 ]
 
 # Middleware
@@ -34,7 +43,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# URLs
 ROOT_URLCONF = 'splojsite.urls'
 WSGI_APPLICATION = 'splojsite.wsgi.application'
 
@@ -56,18 +64,14 @@ TEMPLATES = [
 ]
 
 # Database
+DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://postgres:yourpassword@localhost:5432/yourdb')
 DATABASES = {
-    'default': dj_database_url.parse(
-        'postgresql://postgres:cwmPLSkrTgRCQFTOGnIugKsnFBlkuprl@interchange.proxy.rlwy.net:39970/railway',
+    'default': dj_database_url.config(
+        default=DATABASE_URL,
         conn_max_age=600,
-        ssl_require=True,
+        ssl_require=not DEBUG,
     )
 }
-
-# Superuser
-DJANGO_SUPERUSER_USERNAME = 'sploj-office'
-DJANGO_SUPERUSER_EMAIL = 'admin@sploj.com'
-DJANGO_SUPERUSER_PASSWORD = 'Machynlleth25!'
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -89,19 +93,26 @@ STATICFILES_DIRS = [BASE_DIR / 'main' / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# MEDIA (Local storage)
+# Media (Local Storage)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
-# Default PK type
+# Default PK field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Security Headers
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# === Security Headers ===
+if DEBUG:
+    SECURE_SSL_REDIRECT = False
+    SECURE_PROXY_SSL_HEADER = None
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+else:
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
 X_FRAME_OPTIONS = 'DENY'
 
 # CSRF Trusted Origins
@@ -115,20 +126,11 @@ CSRF_TRUSTED_ORIGINS = [
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '[{levelname}] {asctime} {name} | {message}',
-            'style': '{',
-        },
-    },
     'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
+        'console': {'class': 'logging.StreamHandler'},
     },
     'root': {
         'handlers': ['console'],
-        'level': 'INFO',
+        'level': 'DEBUG' if DEBUG else 'INFO',
     },
 }
