@@ -10,7 +10,7 @@
     <nav>
         <div class="nav-wrapper">
             <a href="{% url 'whats_on' %}" class="logo">
-                <img src="{{ logo_url }}" alt="Sploj Logo" class="logo-img">
+                <img src="{% static 'main/images/logo.png' %}" alt="Sploj Logo" class="logo-img">
             </a>
 
             <button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -46,16 +46,16 @@
             <div class="footer-inner">
                 <div class="footer-socials">
                     <a href="https://www.instagram.com/splojmach/" target="_blank" aria-label="Instagram">
-                        <img src="{{ instagram_icon_url }}" alt="Instagram">
+                        <img src="{% static 'main/images/instagram.png' %}" alt="Instagram">
                     </a>
                     <a href="https://www.tiktok.com/@splojmach" target="_blank" aria-label="TikTok">
-                        <img src="{{ tiktok_icon_url }}" alt="TikTok">
+                        <img src="{% static 'main/images/tiktok.png' %}" alt="TikTok">
                     </a>
                     <a href="https://www.youtube.com/channel/UCEtqhvb3QRLa2NFPVxM7XGg" target="_blank" aria-label="YouTube">
-                        <img src="{{ youtube_icon_url }}" alt="YouTube">
+                        <img src="{% static 'main/images/youtube.png' %}" alt="YouTube">
                     </a>
                     <a href="https://chat.whatsapp.com/CwqzmAqxddE1d0Qu548dfm" target="_blank" aria-label="WhatsApp">
-                        <img src="{{ whatsapp_icon_url }}" alt="WhatsApp">
+                        <img src="{% static 'main/images/whatsapp.png' %}" alt="WhatsApp">
                     </a>
                 </div>
 

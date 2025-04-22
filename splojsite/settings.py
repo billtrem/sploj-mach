@@ -19,7 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
-    'storages',
+    # 'storages',  # no longer needed if not using Wasabi
 ]
 
 # Middleware
@@ -55,7 +55,7 @@ TEMPLATES = [
     },
 ]
 
-# Database (LOCAL DEVELOPMENT should use Railway PUBLIC URL)
+# Database
 DATABASES = {
     'default': dj_database_url.parse(
         'postgresql://postgres:cwmPLSkrTgRCQFTOGnIugKsnFBlkuprl@interchange.proxy.rlwy.net:39970/railway',
@@ -64,7 +64,7 @@ DATABASES = {
     )
 }
 
-# Superuser (optional automation)
+# Superuser
 DJANGO_SUPERUSER_USERNAME = 'sploj-office'
 DJANGO_SUPERUSER_EMAIL = 'admin@sploj.com'
 DJANGO_SUPERUSER_PASSWORD = 'Machynlleth25!'
@@ -89,18 +89,10 @@ STATICFILES_DIRS = [BASE_DIR / 'main' / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Wasabi S3 Media Settings
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-AWS_ACCESS_KEY_ID = 'B83PFQOU9FCYCVZGMZIY'
-AWS_SECRET_ACCESS_KEY = '8TrYW21MzNcL3nkPpAaiwpDopvazvWtzVvRLHUu8'
-AWS_STORAGE_BUCKET_NAME = 'sploj-media'
-AWS_S3_ENDPOINT_URL = 'https://s3.eu-west-1.wasabisys.com'
-AWS_S3_REGION_NAME = 'eu-west-1'
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
-AWS_QUERYSTRING_AUTH = False  # Pre-signed URLs used in templates
-MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.eu-west-1.wasabisys.com/'
+# MEDIA (Local storage)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # Default PK type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

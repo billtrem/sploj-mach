@@ -8,5 +8,5 @@ urlpatterns = [
     path('', include('main.urls')),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Serve media files in both DEBUG and production (good for small projects)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

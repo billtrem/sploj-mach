@@ -7,7 +7,4 @@ urlpatterns = [
     path('projects/<slug:category_slug>/', views.category_view, name='category_view'),
     path('info/', views.info, name='info'),
     path('post/<slug:slug>/', views.post_detail, name='post_detail'),
-
-    # Wasabi Pre-signed URL route (used for secure image access)
-    path('media-url/<path:key>/', views.get_presigned_url, name='get_presigned_url'),
 ]

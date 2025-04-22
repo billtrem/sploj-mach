@@ -6,7 +6,7 @@
 <h1>{{ category.name }}</h1>
 
 {% if category.photo %}
-    <img src="{{ category.photo_url }}" alt="{{ category.name }}" style="max-width: 100%; height: auto; margin-bottom: 20px;">
+    <img src="{{ category.photo.url }}" alt="{{ category.name }}" style="max-width: 100%; height: auto; margin-bottom: 20px;">
 {% endif %}
 
 {% if category.info %}
@@ -32,7 +32,7 @@
             <div style="flex: 1 1 300px; min-width: 250px; text-align: center;">
                 {% for member in category.team_members.all %}
                     {% if member.photo %}
-                        <img src="{{ member.photo_url }}" alt="{{ member.name }}" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">
+                        <img src="{{ member.photo.url }}" alt="{{ member.name }}" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">
                     {% endif %}
                     <h4>{{ member.name }}</h4>
                     {% if member.job_title %}
@@ -51,7 +51,7 @@
     <div class="post" style="margin-bottom: 40px;">
         <h3>{{ post.title }}</h3>
         {% if post.image %}
-            <img src="{{ post.image_url }}" alt="{{ post.title }}" style="max-width: 100%; height: auto; margin-bottom: 10px;">
+            <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 100%; height: auto; margin-bottom: 10px;">
         {% endif %}
         <p>{{ post.content|truncatechars:250 }}</p>
         <a href="{% url 'post_detail' post.slug %}" style="display: inline-block; margin-top: 10px; background-color: #333; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;">
@@ -70,7 +70,7 @@
         <div class="funder-logos" style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
             {% for funder in category.funders.all %}
                 {% if funder.logo %}
-                    <img src="{{ funder.logo_url }}" alt="{{ funder.name }}" class="funder-logo" style="height: 60px; max-width: 150px; object-fit: contain;">
+                    <img src="{{ funder.logo.url }}" alt="{{ funder.name }}" class="funder-logo" style="height: 60px; max-width: 150px; object-fit: contain;">
                 {% endif %}
             {% endfor %}
         </div>

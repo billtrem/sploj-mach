@@ -30,7 +30,7 @@
         {% for member in info_page.team_members.all %}
             <div class="team-member">
                 {% if member.photo %}
-                    <img src="{{ member.photo_url }}" alt="{{ member.name }}">
+                    <img src="{{ member.photo.url }}" alt="{{ member.name }}">
                 {% endif %}
                 <h4 class="name">{{ member.name }}</h4>
                 {% if member.job_title %}
@@ -85,7 +85,7 @@
             <div class="funder-logos">
                 {% for funder in funders %}
                     {% if funder.show_on_info_page and funder.logo %}
-                        <img src="{{ funder.logo_url }}" alt="{{ funder.name }}" class="funder-logo">
+                        <img src="{{ funder.logo.url }}" alt="{{ funder.name }}" class="funder-logo">
                     {% endif %}
                 {% endfor %}
             </div>
