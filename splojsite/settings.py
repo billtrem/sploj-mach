@@ -3,7 +3,7 @@ import os
 import dj_database_url
 from dotenv import load_dotenv
 
-# Load .env for secrets (recommended for local dev)
+# Load environment variables
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
@@ -11,14 +11,13 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-secret-key')
 DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
-if DEBUG:
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-else:
-    ALLOWED_HOSTS = [
-        'sploj.com',
-        'www.sploj.com',
-        'web-production-33eb.up.railway.app',
-    ]
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'sploj.com',
+    'www.sploj.com',
+    'web-production-33eb.up.railway.app',
+]
 
 # Installed apps
 INSTALLED_APPS = [
@@ -29,6 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 # Middleware
@@ -93,15 +94,18 @@ STATICFILES_DIRS = [BASE_DIR / 'main' / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media (Local Storage)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+# Cloudinary Media
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dqmh99cik',
+    'API_KEY': '669762426159988',
+    'API_SECRET': 'pZa7ZQbOf7Y_Lbs6OSqZ8Zf7lxg',
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-# Default PK field type
+# Default PK type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# === Security Headers ===
+# Security Headers
 if DEBUG:
     SECURE_SSL_REDIRECT = False
     SECURE_PROXY_SSL_HEADER = None
