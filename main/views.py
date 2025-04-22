@@ -1,40 +1,42 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Post, ProjectCategory, InfoPage, Funder, TeamMember
 from django.conf import settings
 from django.http import JsonResponse, Http404
 from django.views.decorators.http import require_GET
+from .models import Post, ProjectCategory, InfoPage, Funder, TeamMember
 import boto3
 
+
 def get_presigned_url_for_key(key):
-    """Generates a presigned URL for a given S3 object key."""
+    """Generate a presigned URL for a file stored in Wasabi (S3-compatible)."""
     if not key:
         return ''
-    s3 = boto3.client(
-        's3',
-        endpoint_url=settings.AWS_S3_ENDPOINT_URL,
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-        region_name=settings.AWS_S3_REGION_NAME,
-    )
     try:
+        s3 = boto3.client(
+            's3',
+            endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_S3_REGION_NAME,
+        )
         return s3.generate_presigned_url(
             ClientMethod='get_object',
             Params={'Bucket': settings.AWS_STORAGE_BUCKET_NAME, 'Key': key},
-            ExpiresIn=3600  # 1 hour expiration
+            ExpiresIn=3600  # 1 hour
         )
-    except Exception:
+    except Exception as e:
+        print(f"❌ Failed to generate presigned URL for key '{key}':", e)
         return ''
 
+
 def whats_on(request):
-    """View for listing posts with presigned URLs for images."""
     posts = Post.objects.order_by('-created_at')
     for post in posts:
         if post.image:
             post.image_url = get_presigned_url_for_key(post.image.name)
     return render(request, 'main/whats_on.html', {'posts': posts})
 
+
 def category_view(request, category_slug):
-    """View for displaying posts within a category with presigned URLs."""
     category = get_object_or_404(ProjectCategory, name__iexact=category_slug.replace('-', ' '))
 
     if category.photo:
@@ -58,8 +60,8 @@ def category_view(request, category_slug):
         'posts': posts,
     })
 
+
 def info(request):
-    """View for displaying the Info page, team, categories, and funders with presigned URLs."""
     info_page = InfoPage.objects.first()
     funders = Funder.objects.all()
     team_members = TeamMember.objects.filter(info_page=info_page)
@@ -84,18 +86,17 @@ def info(request):
         'team_members': team_members,
     })
 
+
 def post_detail(request, slug):
-    """View for displaying a single post with a presigned URL for the image."""
     post = get_object_or_404(Post, slug=slug)
     if post.image:
         post.image_url = get_presigned_url_for_key(post.image.name)
     return render(request, 'main/post_detail.html', {'post': post})
 
+
 @require_GET
 def get_presigned_url(request, key):
-    """View for generating a presigned URL for the requested file."""
     url = get_presigned_url_for_key(key)
     if url:
         return JsonResponse({'url': url})
-    else:
-        raise Http404("File not found")
+    raise Http404("File not found")

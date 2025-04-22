@@ -6,7 +6,7 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security
-SECRET_KEY = 'django-insecure-7r@%=2n!8k$+1bmzjw6b@a$3xsmq&1'  # already set in Railway
+SECRET_KEY = 'django-insecure-7r@%=2n!8k$+1bmzjw6b@a$3xsmq&1'
 DEBUG = False
 ALLOWED_HOSTS = ['sploj.com', 'www.sploj.com', 'web-production-33eb.up.railway.app']
 
@@ -55,16 +55,16 @@ TEMPLATES = [
     },
 ]
 
-# Database
+# Database (LOCAL DEVELOPMENT should use Railway PUBLIC URL)
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgresql://postgres:cwmPLSkrTgRCQFTOGnIugKsnFBlkuprl@postgres.railway.internal:5432/railway',
+    'default': dj_database_url.parse(
+        'postgresql://postgres:cwmPLSkrTgRCQFTOGnIugKsnFBlkuprl@interchange.proxy.rlwy.net:39970/railway',
         conn_max_age=600,
         ssl_require=True,
     )
 }
 
-# Superuser (for automation)
+# Superuser (optional automation)
 DJANGO_SUPERUSER_USERNAME = 'sploj-office'
 DJANGO_SUPERUSER_EMAIL = 'admin@sploj.com'
 DJANGO_SUPERUSER_PASSWORD = 'Machynlleth25!'
@@ -92,14 +92,14 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Wasabi S3 Media Settings
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-AWS_ACCESS_KEY_ID = 'GOLQC658QR43JVI7ANCA'
-AWS_SECRET_ACCESS_KEY = 'lllCW4f5zCW3TSSmDXWDR6tg15l1Bp8jOnoDVhA0'
+AWS_ACCESS_KEY_ID = 'B83PFQOU9FCYCVZGMZIY'
+AWS_SECRET_ACCESS_KEY = '8TrYW21MzNcL3nkPpAaiwpDopvazvWtzVvRLHUu8'
 AWS_STORAGE_BUCKET_NAME = 'sploj-media'
 AWS_S3_ENDPOINT_URL = 'https://s3.eu-west-1.wasabisys.com'
 AWS_S3_REGION_NAME = 'eu-west-1'
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
-AWS_QUERYSTRING_AUTH = False  # We're using pre-signed URLs
+AWS_QUERYSTRING_AUTH = False  # Pre-signed URLs used in templates
 MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.eu-west-1.wasabisys.com/'
 
 # Default PK type
@@ -112,14 +112,14 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 X_FRAME_OPTIONS = 'DENY'
 
-# CSRF
+# CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
     'https://sploj.com',
     'https://www.sploj.com',
     'https://web-production-33eb.up.railway.app',
 ]
 
-# Basic Logging
+# Logging
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
