@@ -2,6 +2,8 @@ from pathlib import Path
 import os
 import dj_database_url
 from dotenv import load_dotenv
+from datetime import timedelta
+import logging
 
 # Load environment variables
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,17 +11,17 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # Security
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-secret-key')
-DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
+DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    'sploj.com',
-    'www.sploj.com',
-    'web-production-33eb.up.railway.app',
+    "127.0.0.1",
+    "localhost",
+    "sploj.com",
+    "www.sploj.com",
+    "web-production-33eb.up.railway.app",
 ]
 
-# Installed apps
+# Installed Apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -45,13 +47,14 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'splojsite.urls'
+
 WSGI_APPLICATION = 'splojsite.wsgi.application'
 
 # Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,7 +77,12 @@ DATABASES = {
     )
 }
 
-# Password validation
+# Superuser (for startup automation)
+DJANGO_SUPERUSER_USERNAME = os.getenv('DJANGO_SUPERUSER_USERNAME', 'sploj-office')
+DJANGO_SUPERUSER_EMAIL = os.getenv('DJANGO_SUPERUSER_EMAIL', 'admin@sploj.com')
+DJANGO_SUPERUSER_PASSWORD = os.getenv('DJANGO_SUPERUSER_PASSWORD', 'Machynlleth25!')
+
+# Password Validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -90,11 +98,18 @@ USE_TZ = True
 
 # Static files
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'main' / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / 'main' / 'static' / 'custom',
+    BASE_DIR / 'main' / 'static',
+]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
-# Cloudinary Media
+# Media via Cloudinary
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dqmh99cik',
     'API_KEY': '669762426159988',
@@ -102,28 +117,37 @@ CLOUDINARY_STORAGE = {
 }
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-# Default PK type
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 # Security Headers
 if DEBUG:
     SECURE_SSL_REDIRECT = False
     SECURE_PROXY_SSL_HEADER = None
-    SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
 else:
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
 
 X_FRAME_OPTIONS = 'DENY'
 
 # CSRF Trusted Origins
 CSRF_TRUSTED_ORIGINS = [
-    'https://sploj.com',
-    'https://www.sploj.com',
-    'https://web-production-33eb.up.railway.app',
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    "https://sploj.com",
+    "https://www.sploj.com",
+    "https://web-production-33eb.up.railway.app",
+]
+
+# CORS (optional for future)
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    "https://sploj.com",
+    "https://www.sploj.com",
 ]
 
 # Logging
@@ -133,8 +157,14 @@ LOGGING = {
     'handlers': {
         'console': {'class': 'logging.StreamHandler'},
     },
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG' if DEBUG else 'INFO',
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
     },
 }
+
+# Default PK type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
