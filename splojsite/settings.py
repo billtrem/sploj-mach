@@ -67,15 +67,20 @@ TEMPLATES = [
     },
 ]
 
-# Database
-DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://postgres:yourpassword@localhost:5432/yourdb')
+# ✅ Database
+DATABASE_URL = os.getenv(
+    'DATABASE_URL',
+    'postgresql://postgres:cwmPLSkrTgRCQFTOGnIugKsnFBlkuprl@postgres.railway.internal:5432/railway'
+)
+
 DATABASES = {
     'default': dj_database_url.config(
         default=DATABASE_URL,
         conn_max_age=600,
-        ssl_require=not DEBUG,
+        ssl_require=not DEBUG,  # SSL only required in production
     )
 }
+
 
 # Superuser (for startup automation)
 DJANGO_SUPERUSER_USERNAME = os.getenv('DJANGO_SUPERUSER_USERNAME', 'sploj-office')
@@ -99,15 +104,46 @@ USE_TZ = True
 # Static files
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 STATICFILES_DIRS = [
-    BASE_DIR / 'main' / 'static' / 'custom',
+    # Only include this if the folder exists to avoid runtime errors:
+    # BASE_DIR / 'main' / 'static' / 'custom',
     BASE_DIR / 'main' / 'static',
 ]
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
+
+# ✅ Database (with optional SQLite fallback for local dev)
+DATABASE_URL = os.getenv(
+    'DATABASE_URL',
+    'postgresql://postgres:cwmPLSkrTgRCQFTOGnIugKsnFBlkuprl@postgres.railway.internal:5432/railway'
+)
+
+USE_SQLITE = os.getenv("USE_SQLITE", "False") == "True"
+
+if DEBUG and USE_SQLITE:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=not DEBUG,
+        )
+    }
+
+
+
 
 # Media via Cloudinary
 CLOUDINARY_STORAGE = {
