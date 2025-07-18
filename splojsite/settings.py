@@ -3,7 +3,6 @@ import os
 import dj_database_url
 from dotenv import load_dotenv
 import logging
-import urllib.parse
 
 # Load environment variables
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -66,16 +65,10 @@ TEMPLATES = [
     },
 ]
 
-# ✅ Database (robust fallback and Railway-ready)
+# ✅ Database — uses only DATABASE_URL
 DATABASE_URL = os.getenv("DATABASE_URL")
-
 if not DATABASE_URL:
-    pg_user = os.getenv("PGUSER", "postgres")
-    pg_password = urllib.parse.quote_plus(os.getenv("PGPASSWORD", ""))
-    pg_host = os.getenv("PGHOST", "localhost")
-    pg_port = os.getenv("PGPORT", "5432")
-    pg_db = os.getenv("PGDATABASE", "railway")
-    DATABASE_URL = f"postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_db}"
+    raise Exception("DATABASE_URL environment variable is missing or empty.")
 
 USE_SQLITE = os.getenv("USE_SQLITE", "False") == "True"
 
@@ -100,7 +93,7 @@ DJANGO_SUPERUSER_USERNAME = os.getenv('DJANGO_SUPERUSER_USERNAME', 'sploj-office
 DJANGO_SUPERUSER_EMAIL = os.getenv('DJANGO_SUPERUSER_EMAIL', 'admin@sploj.com')
 DJANGO_SUPERUSER_PASSWORD = os.getenv('DJANGO_SUPERUSER_PASSWORD', 'Machynlleth25!')
 
-# Password Validation
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -114,12 +107,11 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static Files
+# Static files
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'main' / 'static',
-    # BASE_DIR / 'main' / 'static' / 'custom',
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_FINDERS = [
@@ -127,15 +119,11 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
-# Media via Cloudinary
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dqmh99cik',
-    'API_KEY': '669762426159988',
-    'API_SECRET': 'pZa7ZQbOf7Y_Lbs6OSqZ8Zf7lxg',
-}
+# ✅ Media via Cloudinary — uses CLOUDINARY_URL
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+CLOUDINARY_STORAGE = {}
 
-# Security Headers
+# Security headers
 if DEBUG:
     SECURE_SSL_REDIRECT = False
     SECURE_PROXY_SSL_HEADER = None
