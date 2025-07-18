@@ -2,7 +2,6 @@ from pathlib import Path
 import os
 import dj_database_url
 from dotenv import load_dotenv
-from datetime import timedelta
 import logging
 
 # Load environment variables
@@ -47,7 +46,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'splojsite.urls'
-
 WSGI_APPLICATION = 'splojsite.wsgi.application'
 
 # Templates
@@ -70,19 +68,28 @@ TEMPLATES = [
 # ✅ Database
 DATABASE_URL = os.getenv(
     'DATABASE_URL',
-    'postgresql://postgres:cwmPLSkrTgRCQFTOGnIugKsnFBlkuprl@postgres.railway.internal:5432/railway'
+    'postgresql://postgres:default@localhost:5432/railway'
 )
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=DATABASE_URL,
-        conn_max_age=600,
-        ssl_require=not DEBUG,  # SSL only required in production
-    )
-}
+USE_SQLITE = os.getenv("USE_SQLITE", "False") == "True"
 
+if DEBUG and USE_SQLITE:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=not DEBUG
+        )
+    }
 
-# Superuser (for startup automation)
+# Superuser automation (optional)
 DJANGO_SUPERUSER_USERNAME = os.getenv('DJANGO_SUPERUSER_USERNAME', 'sploj-office')
 DJANGO_SUPERUSER_EMAIL = os.getenv('DJANGO_SUPERUSER_EMAIL', 'admin@sploj.com')
 DJANGO_SUPERUSER_PASSWORD = os.getenv('DJANGO_SUPERUSER_PASSWORD', 'Machynlleth25!')
@@ -101,49 +108,19 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+# Static Files
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-
 STATICFILES_DIRS = [
-    # Only include this if the folder exists to avoid runtime errors:
-    # BASE_DIR / 'main' / 'static' / 'custom',
     BASE_DIR / 'main' / 'static',
+    # Uncomment if you add this folder:
+    # BASE_DIR / 'main' / 'static' / 'custom',
 ]
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
-
-# ✅ Database (with optional SQLite fallback for local dev)
-DATABASE_URL = os.getenv(
-    'DATABASE_URL',
-    'postgresql://postgres:cwmPLSkrTgRCQFTOGnIugKsnFBlkuprl@postgres.railway.internal:5432/railway'
-)
-
-USE_SQLITE = os.getenv("USE_SQLITE", "False") == "True"
-
-if DEBUG and USE_SQLITE:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=600,
-            ssl_require=not DEBUG,
-        )
-    }
-
-
-
 
 # Media via Cloudinary
 CLOUDINARY_STORAGE = {
@@ -176,7 +153,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://web-production-33eb.up.railway.app",
 ]
 
-# CORS (optional for future)
+# CORS
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
