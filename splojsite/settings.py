@@ -3,6 +3,7 @@ import os
 import dj_database_url
 from dotenv import load_dotenv
 import logging
+import urllib.parse
 
 # Load environment variables
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -65,11 +66,16 @@ TEMPLATES = [
     },
 ]
 
-# ✅ Database
-DATABASE_URL = os.getenv(
-    'DATABASE_URL',
-    'postgresql://postgres:default@localhost:5432/railway'
-)
+# ✅ Database (robust fallback and Railway-ready)
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    pg_user = os.getenv("PGUSER", "postgres")
+    pg_password = urllib.parse.quote_plus(os.getenv("PGPASSWORD", ""))
+    pg_host = os.getenv("PGHOST", "localhost")
+    pg_port = os.getenv("PGPORT", "5432")
+    pg_db = os.getenv("PGDATABASE", "railway")
+    DATABASE_URL = f"postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_db}"
 
 USE_SQLITE = os.getenv("USE_SQLITE", "False") == "True"
 
@@ -113,7 +119,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'main' / 'static',
-    # Uncomment if you add this folder:
     # BASE_DIR / 'main' / 'static' / 'custom',
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
