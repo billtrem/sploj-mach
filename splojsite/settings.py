@@ -8,8 +8,16 @@ import logging
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
-# Security
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-secret-key')
+# Set up logging early
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# === Security ===
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+if not SECRET_KEY:
+    logger.warning("DJANGO_SECRET_KEY is not set! Using unsafe default key.")
+    SECRET_KEY = 'unsafe-default-key'
+
 DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
@@ -20,7 +28,7 @@ ALLOWED_HOSTS = [
     "web-production-33eb.up.railway.app",
 ]
 
-# Installed Apps
+# === Installed Apps ===
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -33,7 +41,7 @@ INSTALLED_APPS = [
     'cloudinary_storage',
 ]
 
-# Middleware
+# === Middleware ===
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -48,7 +56,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'splojsite.urls'
 WSGI_APPLICATION = 'splojsite.wsgi.application'
 
-# Templates
+# === Templates ===
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -65,14 +73,12 @@ TEMPLATES = [
     },
 ]
 
-# ✅ Database — uses only DATABASE_URL
+# === Database ===
 DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
-    raise Exception("DATABASE_URL environment variable is missing or empty.")
+    raise Exception("❌ DATABASE_URL environment variable is missing or empty.")
 
-USE_SQLITE = os.getenv("USE_SQLITE", "False") == "True"
-
-if DEBUG and USE_SQLITE:
+if DEBUG and os.getenv("USE_SQLITE", "False") == "True":
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -88,12 +94,12 @@ else:
         )
     }
 
-# Superuser automation (optional)
+# === Optional Superuser ===
 DJANGO_SUPERUSER_USERNAME = os.getenv('DJANGO_SUPERUSER_USERNAME', 'sploj-office')
 DJANGO_SUPERUSER_EMAIL = os.getenv('DJANGO_SUPERUSER_EMAIL', 'admin@sploj.com')
 DJANGO_SUPERUSER_PASSWORD = os.getenv('DJANGO_SUPERUSER_PASSWORD', 'Machynlleth25!')
 
-# Password validation
+# === Password Validation ===
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -101,29 +107,27 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Localization
+# === Localization ===
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+# === Static Files ===
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [
-    BASE_DIR / 'main' / 'static',
-]
+STATICFILES_DIRS = [BASE_DIR / 'main' / 'static']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
-# ✅ Media via Cloudinary — uses CLOUDINARY_URL
+# === Media: Cloudinary ===
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 CLOUDINARY_STORAGE = {}
 
-# Security headers
+# === Security Headers ===
 if DEBUG:
     SECURE_SSL_REDIRECT = False
     SECURE_PROXY_SSL_HEADER = None
@@ -137,7 +141,7 @@ else:
 
 X_FRAME_OPTIONS = 'DENY'
 
-# CSRF Trusted Origins
+# === CSRF ===
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:8000",
@@ -146,7 +150,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://web-production-33eb.up.railway.app",
 ]
 
-# CORS
+# === CORS ===
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
@@ -156,7 +160,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://www.sploj.com",
 ]
 
-# Logging
+# === Logging ===
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -172,5 +176,5 @@ LOGGING = {
     },
 }
 
-# Default PK type
+# === Default PK ===
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
