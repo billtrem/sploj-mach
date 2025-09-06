@@ -362,7 +362,6 @@ nav .dropdown-content a {
         border-radius: 14px;
     }
 }
-
 /* MODAL */
 .film-modal {
     display: none;
@@ -386,6 +385,16 @@ nav .dropdown-content a {
     animation: slideUp 0.4s ease-out;
     overflow: hidden;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* Mobile adjustments for modal */
+@media (max-width: 600px) {
+    .modal-content {
+        margin: 3rem 5px; /* reduces space on top & sides */
+        padding: 1rem; /* ensures padding inside modal */
+        width: calc(100% - 10px); /* prevents overflow */
+        box-sizing: border-box;
+    }
 }
 
 @keyframes slideUp {
