@@ -201,16 +201,21 @@ nav .dropdown-content a {
     line-height: 1.5;
 }
 /* Newsletter in Info Page */
-/* Newsletter in Info Page */
 .newsletter-section {
-    margin: 0 auto; /* Centers the whole block */
-    padding: 15px; /* ✅ Space inside the border */
-    border: 1px solid #000; /* ✅ Thin black border */
-    border-radius: 0; /* ✅ No rounded corners */
-    max-width: 600px; /* Prevents it being too wide */
-    text-align: left; /* Keep content aligned inside */
+    margin: 0 auto;
+    padding: 15px;
+    border: 1px solid #000;
+    border-radius: 0;
+    max-width: 600px;
+    text-align: left;
+    box-sizing: border-box;
 }
 
+/* Force all children to respect container width */
+.newsletter-section * {
+    max-width: 100% !important;
+    box-sizing: border-box;
+}
 
 .newsletter-section h2 {
     font-size: 1.4rem;
@@ -225,16 +230,18 @@ nav .dropdown-content a {
     gap: 10px;
     align-items: center;
     margin-bottom: 10px;
+    flex-wrap: wrap;
 }
 
 .newsletter-section .mc-field-group label {
     flex: 0 0 auto;
     font-weight: bold;
-    color: #000000; /* ✅ Force label text to black */
+    color: #000000;
 }
 
 .newsletter-section input[type="email"] {
     flex: 1 1 auto;
+    min-width: 200px;
     padding: 10px;
     font-size: 1rem;
     border-radius: 4px;
@@ -256,6 +263,23 @@ nav .dropdown-content a {
 
 .newsletter-section .button:hover {
     opacity: 0.85;
+}
+
+/* Mobile: stack form fields */
+@media (max-width: 600px) {
+    .newsletter-section .mc-field-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .newsletter-section .mc-field-group label {
+        margin-bottom: 5px;
+    }
+
+    .newsletter-section input[type="email"],
+    .newsletter-section .button {
+        width: 100% !important;
+    }
 }
 
 /* Team grid */

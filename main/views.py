@@ -1,33 +1,30 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Post, ProjectCategory, InfoPage, Funder, TeamMember
+from .models import Project, InfoSection
 
 def whats_on(request):
-    posts = Post.objects.order_by('-created_at')
-    return render(request, 'main/whats_on.html', {'posts': posts})
-
-def category_view(request, category_slug):
-    category = get_object_or_404(ProjectCategory, name__iexact=category_slug.replace('-', ' '))
-
-    posts = Post.objects.filter(categories=category).order_by('-created_at')
-
-    return render(request, 'main/category_view.html', {
-        'category': category,
-        'posts': posts,
+    projects = Project.objects.order_by('-created_at')
+    return render(request, 'main/whats_on.html', {
+        'projects': projects
     })
+
+def project_modal(request, slug):
+    project = get_object_or_404(Project, slug=slug)
+    sections = project.info_sections.all().order_by('id')
+
+    if project.link_label == 'signup':
+        button_color = '#000000'
+    else:
+        button_color = project.color or '#000000'
+
+    return render(request, 'main/projectdetail.html', {
+        'project': project,
+        'sections': sections,
+        'button_color': button_color
+    })
+
 
 def info(request):
-    info_page = InfoPage.objects.first()
-    funders = Funder.objects.all()
-    team_members = TeamMember.objects.filter(info_page=info_page)
-    categories = ProjectCategory.objects.all()
-
+    sections = InfoSection.objects.filter(project__isnull=True).order_by('id')
     return render(request, 'main/info.html', {
-        'info_page': info_page,
-        'funders': funders,
-        'categories': categories,
-        'team_members': team_members,
+        'sections': sections
     })
-
-def post_detail(request, slug):
-    post = get_object_or_404(Post, slug=slug)
-    return render(request, 'main/post_detail.html', {'post': post})

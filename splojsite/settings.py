@@ -4,11 +4,11 @@ import dj_database_url
 from dotenv import load_dotenv
 import logging
 
-# Load environment variables
+# === Load environment variables ===
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
-# Set up logging early
+# === Logging setup ===
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -75,23 +75,23 @@ TEMPLATES = [
 
 # === Database ===
 DATABASE_URL = os.getenv("DATABASE_URL")
-if not DATABASE_URL:
-    raise Exception("❌ DATABASE_URL environment variable is missing or empty.")
 
-if DEBUG and os.getenv("USE_SQLITE", "False") == "True":
+if DATABASE_URL:
+    logger.info("✅ Using DATABASE_URL for database")
+    DATABASES = {
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    logger.info("💾 Using SQLite (no DATABASE_URL found)")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
-    }
-else:
-    DATABASES = {
-        'default': dj_database_url.parse(
-            DATABASE_URL,
-            conn_max_age=600,
-            ssl_require=not DEBUG
-        )
     }
 
 # === Optional Superuser ===

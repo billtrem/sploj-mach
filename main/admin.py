@@ -1,53 +1,43 @@
 from django.contrib import admin
-from .models import Post, ProjectCategory, InfoPage, Funder, TeamMember
+from .models import Project, InfoSection
 
 
-@admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'created_at', 'display_categories')
-    list_filter = ('categories', 'created_at')
-    search_fields = ('title', 'content')
-    prepopulated_fields = {'slug': ('title',)}  # Auto-generate slug
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ('title', 'link_label', 'link', 'created_at', 'poster_preview')
+    search_fields = ('title', 'description')
+    list_filter = ('link_label', 'created_at')
+    prepopulated_fields = {'slug': ('title',)}
 
-    def display_categories(self, obj):
-        return ", ".join([cat.name for cat in obj.categories.all()])
-    display_categories.short_description = 'Categories'
-
-
-class TeamMemberInline(admin.TabularInline):
-    model = TeamMember
-    extra = 1
-    show_change_link = True
-
-
-@admin.register(ProjectCategory)
-class ProjectCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'signup_link', 'color')
-    search_fields = ('name', 'info')
-    inlines = [TeamMemberInline]
-
-
-@admin.register(InfoPage)
-class InfoPageAdmin(admin.ModelAdmin):
-    list_display = ('location',)
-    inlines = [TeamMemberInline]
-
-
-@admin.register(Funder)
-class FunderAdmin(admin.ModelAdmin):
-    list_display = ('name', 'show_on_info_page')
-    list_filter = ('show_on_info_page',)
-    filter_horizontal = ('project_categories',)
-    search_fields = ('name',)
-
-
-@admin.register(TeamMember)
-class TeamMemberAdmin(admin.ModelAdmin):
-    list_display = ('name', 'job_title', 'project_category')
-    list_filter = ('project_category',)
-    search_fields = (
-        'name',
-        'job_title',
-        'description',
-        'project_category__name',
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'slug', 'description')
+        }),
+        ('Images', {
+            'fields': ('poster', 'horizontal_image')
+        }),
+        ('Video', {
+            'fields': ('video_embed_code',)
+        }),
+        ('Link Settings', {
+            'fields': ('link', 'link_label', 'color')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at',),
+            'classes': ('collapse',),
+        }),
     )
+    readonly_fields = ('created_at',)
+
+    def poster_preview(self, obj):
+        if obj.poster:
+            return f'<img src="{obj.poster.url}" width="50" height="75" style="object-fit:cover; border-radius:4px;" />'
+        return "—"
+    poster_preview.allow_tags = True
+    poster_preview.short_description = 'Poster'
+
+
+@admin.register(InfoSection)
+class InfoSectionAdmin(admin.ModelAdmin):
+    list_display = ('title', 'project')
+    search_fields = ('title', 'content')

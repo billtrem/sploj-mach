@@ -1,45 +1,69 @@
 {% extends 'main/base.html' %}
+{% load static %}
 
 {% block title %}What’s On – Sploj{% endblock %}
 
 {% block content %}
-<h1>What’s On</h1>
-
-{% for post in posts %}
-    <div class="post">
-        <h2>{{ post.title }}</h2>
-
-        {% if post.categories.exists %}
-            {% for category in post.categories.all %}
-                <span class="category-label" data-color="{{ category.color|default:'#ccc' }}">
-                    {{ category.name }}
-                </span>
-            {% endfor %}
-        {% endif %}
-
-        {% if post.image %}
-            <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 100%; height: auto; margin-bottom: 10px;">
-        {% else %}
-            <p style="color: red;"><strong>❌ No image uploaded</strong></p>
-        {% endif %}
-
-        <p>{{ post.content|truncatechars:250 }}</p>
-
-        <a href="{% url 'post_detail' slug=post.slug %}" class="button">Read more</a>
-        <p><small>Posted on {{ post.created_at|date:"F j, Y" }}</small></p>
+<div class="whats-on-container">
+    <div class="poster-grid">
+        {% for project in projects %}
+            <div class="poster-tile" onclick="openProjectModal('{{ project.slug }}')">
+                {% if project.poster %}
+                    <img src="{{ project.poster.url }}" alt="{{ project.title }}" class="poster-image" />
+                {% else %}
+                    <div class="poster-placeholder">{{ project.title }}</div>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p class="no-films-message">No projects yet. Check back soon!</p>
+        {% endfor %}
     </div>
-    <hr>
-{% empty %}
-    <p>No posts yet. Check back soon!</p>
-{% endfor %}
+</div>
 
+<!-- ✅ Modal -->
+<div id="projectModal" class="film-modal" style="display:none;">
+    <div class="modal-content">
+        <button class="close-button" type="button" aria-label="Close modal" onclick="closeProjectModal()">
+            &times;
+        </button>
+        <div id="modal-project-detail-content"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
 <script>
-    // Set background color from data-color attributes
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll('.category-label').forEach(function (el) {
-            const color = el.dataset.color;
-            if (color) el.style.backgroundColor = color;
+function openProjectModal(slug) {
+    console.log("Opening modal for slug:", slug);
+    fetch(`/project-modal/${slug}/`)
+        .then(response => {
+            console.log("Fetch response status:", response.status);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(html => {
+            document.getElementById('modal-project-detail-content').innerHTML = html;
+            document.getElementById('projectModal').style.display = 'block';
+            console.log("Modal content loaded successfully");
+        })
+        .catch(err => {
+            console.error('❌ Error loading project modal:', err);
         });
-    });
+}
+
+function closeProjectModal() {
+    console.log("Closing modal");
+    document.getElementById('projectModal').style.display = 'none';
+    document.getElementById('modal-project-detail-content').innerHTML = '';
+}
+
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('projectModal');
+    if (event.target === modal) {
+        closeProjectModal();
+    }
+});
 </script>
 {% endblock %}
