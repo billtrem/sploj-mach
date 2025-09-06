@@ -4,31 +4,34 @@ import dj_database_url
 from dotenv import load_dotenv
 import logging
 
-# === Load environment variables ===
+# === Load env ===
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
-# === Logging setup ===
+# === Logging ===
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # === Security ===
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-if not SECRET_KEY:
-    logger.warning("DJANGO_SECRET_KEY is not set! Using unsafe default key.")
-    SECRET_KEY = 'unsafe-default-key'
+SECRET_KEY = (
+    os.getenv('DJANGO_SECRET_KEY')
+    or os.getenv('SECRET_KEY')            # fallback to SECRET_KEY if provided
+    or 'unsafe-default-key'               # final fallback (dev only)
+)
 
-DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
+# Explicit, simple debug switch
+DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() == 'true'
+logger.info("🚀 Running in DEBUG mode (local dev)" if DEBUG else "🔒 Running in PRODUCTION mode")
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "sploj.com",
     "www.sploj.com",
-    "web-production-33eb.up.railway.app",
+    ".up.railway.app",   # any Railway preview/production domain
 ]
 
-# === Installed Apps ===
+# === Apps ===
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -76,7 +79,19 @@ TEMPLATES = [
 # === Database ===
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-if DATABASE_URL:
+if DEBUG:
+    # Always SQLite locally
+    logger.info("💾 Using SQLite (DEBUG=True)")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    # Always Postgres in production
+    if not DATABASE_URL:
+        raise RuntimeError("❌ DATABASE_URL must be set when DJANGO_DEBUG=False.")
     logger.info("✅ Using DATABASE_URL for database")
     DATABASES = {
         'default': dj_database_url.parse(
@@ -85,21 +100,13 @@ if DATABASE_URL:
             ssl_require=True
         )
     }
-else:
-    logger.info("💾 Using SQLite (no DATABASE_URL found)")
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
 
-# === Optional Superuser ===
+# === Optional Superuser (for pre-deploy scripts) ===
 DJANGO_SUPERUSER_USERNAME = os.getenv('DJANGO_SUPERUSER_USERNAME', 'sploj-office')
 DJANGO_SUPERUSER_EMAIL = os.getenv('DJANGO_SUPERUSER_EMAIL', 'admin@sploj.com')
 DJANGO_SUPERUSER_PASSWORD = os.getenv('DJANGO_SUPERUSER_PASSWORD', 'Machynlleth25!')
 
-# === Password Validation ===
+# === Passwords ===
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -107,13 +114,13 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# === Localization ===
+# === I18N ===
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# === Static Files ===
+# === Static files ===
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'main' / 'static']
@@ -123,11 +130,11 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
-# === Media: Cloudinary ===
+# === Media (Cloudinary) ===
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 CLOUDINARY_STORAGE = {}
 
-# === Security Headers ===
+# === Security headers ===
 if DEBUG:
     SECURE_SSL_REDIRECT = False
     SECURE_PROXY_SSL_HEADER = None
@@ -147,34 +154,15 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "https://sploj.com",
     "https://www.sploj.com",
-    "https://web-production-33eb.up.railway.app",
-]
-
-# === CORS ===
-CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:8000",
-    "http://localhost:8000",
-    "https://sploj.com",
-    "https://www.sploj.com",
+    "https://*.up.railway.app",
 ]
 
 # === Logging ===
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'handlers': {
-        'console': {'class': 'logging.StreamHandler'},
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-    },
+    'handlers': {'console': {'class': 'logging.StreamHandler'}},
+    'loggers': {'django': {'handlers': ['console'], 'level': 'INFO', 'propagate': True}},
 }
 
-# === Default PK ===
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
