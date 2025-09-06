@@ -61,7 +61,7 @@
         </div>
     </footer>
 
-    <script>
+        <script>
         function toggleMenu() {
             document.getElementById("navLinks").classList.toggle("active");
         }
@@ -89,5 +89,8 @@
             document.body.appendChild(script);
         });
     </script>
+
+    {% block extra_js %}{% endblock %}
+
 </body>
 </html>

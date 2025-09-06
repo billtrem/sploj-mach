@@ -12,7 +12,9 @@
     <h2 class="project-title">{{ project.title }}</h2>
 
     {% if project.description %}
-      <p class="project-description">{{ project.description }}</p>
+      <div class="project-description">
+        {{ project.description|linebreaks }}
+      </div>
     {% endif %}
 
     {% if sections %}
@@ -20,7 +22,9 @@
         {% for section in sections %}
           <div class="info-section">
             <h3>{{ section.title }}</h3>
-            <p>{{ section.content|linebreaks }}</p>
+            <div class="info-content">
+              {{ section.content|linebreaks }}
+            </div>
           </div>
         {% endfor %}
       </div>
