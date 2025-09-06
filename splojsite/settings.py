@@ -15,20 +15,19 @@ logger = logging.getLogger(__name__)
 # === Security ===
 SECRET_KEY = (
     os.getenv('DJANGO_SECRET_KEY')
-    or os.getenv('SECRET_KEY')            # fallback to SECRET_KEY if provided
-    or 'unsafe-default-key'               # final fallback (dev only)
+    or os.getenv('SECRET_KEY')
+    or 'unsafe-default-key'
 )
 
-# Explicit, simple debug switch
 DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() == 'true'
-logger.info("🚀 Running in DEBUG mode (local dev)" if DEBUG else "🔒 Running in PRODUCTION mode")
+logger.info("🚀 Running in DEBUG mode" if DEBUG else "🔒 Running in PRODUCTION mode")
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "sploj.com",
     "www.sploj.com",
-    ".up.railway.app",   # any Railway preview/production domain
+    ".up.railway.app",
 ]
 
 # === Apps ===
@@ -79,20 +78,8 @@ TEMPLATES = [
 # === Database ===
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-if DEBUG:
-    # Always SQLite locally
-    logger.info("💾 Using SQLite (DEBUG=True)")
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
-    # Always Postgres in production
-    if not DATABASE_URL:
-        raise RuntimeError("❌ DATABASE_URL must be set when DJANGO_DEBUG=False.")
-    logger.info("✅ Using DATABASE_URL for database")
+if DATABASE_URL:
+    logger.info(f"✅ Using DATABASE_URL for database ({'DEBUG' if DEBUG else 'PROD'})")
     DATABASES = {
         'default': dj_database_url.parse(
             DATABASE_URL,
@@ -100,8 +87,16 @@ else:
             ssl_require=True
         )
     }
+else:
+    logger.info("💾 Using SQLite (no DATABASE_URL found)")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
-# === Optional Superuser (for pre-deploy scripts) ===
+# === Optional Superuser ===
 DJANGO_SUPERUSER_USERNAME = os.getenv('DJANGO_SUPERUSER_USERNAME', 'sploj-office')
 DJANGO_SUPERUSER_EMAIL = os.getenv('DJANGO_SUPERUSER_EMAIL', 'admin@sploj.com')
 DJANGO_SUPERUSER_PASSWORD = os.getenv('DJANGO_SUPERUSER_PASSWORD', 'Machynlleth25!')
