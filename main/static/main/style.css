@@ -1,3 +1,4 @@
+/* === BASE STYLES (unchanged) === */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -16,25 +17,21 @@ nav {
     padding: 15px 0;
 }
 
-/* Wrapper to contain logo and nav, centered */
 .nav-wrapper {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 50px; /* 50px gap between logo and nav links */
+    gap: 50px;
 }
 
-/* Logo image */
 .logo-img {
-    height: 100px; /* Adjust as needed */
+    height: 100px;
     display: block;
 }
 
-/* Nav Links */
 .nav-links {
     display: flex;
     flex-wrap: wrap;
@@ -72,7 +69,6 @@ nav .dropdown-content a {
     color: #000;
 }
 
-
 /* Hamburger Menu */
 .hamburger {
     display: none;
@@ -83,18 +79,14 @@ nav .dropdown-content a {
     color: #333;
 }
 
-/* Mobile Nav Close Button */
 .nav-close {
     align-self: flex-end;
     font-size: 24px;
     cursor: pointer;
     padding: 5px 10px;
     display: none;
-
 }
 
-
-/* Mobile Styles */
 @media screen and (max-width: 768px) {
     .nav-links {
         display: none;
@@ -119,9 +111,7 @@ nav .dropdown-content a {
         font-size: 26px;
         font-weight: bold;
         color: #111;
-        text-decoration: none;
         margin-bottom: 20px;
-        display: block;
     }
 
     .nav-close {
@@ -143,7 +133,6 @@ nav .dropdown-content a {
     }
 }
 
-
 /* Content area */
 .content {
     max-width: 1200px;
@@ -151,59 +140,49 @@ nav .dropdown-content a {
     padding: 40px 20px;
 }
 
-/* Make images responsive */
-img {
-    max-width: 100%;
-    height: auto;
+/* Footer styles */
+.site-footer {
+    background: #f2f2f2;
+    padding: 60px 20px;
+    margin-top: -30px;
+    color: #1113
 }
 
-.button {
-    display: inline-block;
-    background-color: #222;
-    color: white;
-    padding: 10px 15px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    margin-top: 10px;
+.site-footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.category-label {
-    display: inline-block;
-    padding: 5px 10px;
-    color: white;
-    border-radius: 3px;
-    font-size: 0.85em;
-    margin-right: 5px;
-    margin-bottom: 10px;
-}
-
-.post-image {
-    max-width: 100%;
-    height: auto;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.funders-section {
-    margin-top: 60px;
-    text-align: center;
-}
-
-.funder-logos {
+.footer-inner {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.footer-socials {
+    display: flex;
     justify-content: center;
     gap: 20px;
-    margin-top: 20px;
 }
 
-.funder-logo {
-    max-height: 150px;
-    width: auto;
+.footer-socials img {
+    width: 50px;
+    height: 50px;
+    filter: brightness(0);
 }
 
-/* === Info Page Styling === */
+/* Mailchimp form */
+#mc_embed_signup {
+    width: 100%;
+    max-width: 500px;
+}
+
+/* === INFO PAGE === */
+.info-page {
+    max-width: 800px;
+    margin: 0 auto;
+}
 
 .info-page h1,
 .info-page h2 {
@@ -213,193 +192,290 @@ img {
     margin-bottom: 15px;
 }
 
-.info-page p {
-    margin-bottom: 20px;
-    color: #333;
-    line-height: 1.6;
+.info-sections {
+    margin-bottom: 2rem;
 }
 
-.info-page ul {
-    list-style: none;
-    padding: 0;
+.contact-details {
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+/* Newsletter in Info Page */
+/* Newsletter in Info Page */
+.newsletter-section {
+    margin: 0 auto; /* Centers the whole block */
+    padding: 15px; /* ✅ Space inside the border */
+    border: 1px solid #000; /* ✅ Thin black border */
+    border-radius: 0; /* ✅ No rounded corners */
+    max-width: 600px; /* Prevents it being too wide */
+    text-align: left; /* Keep content aligned inside */
 }
 
-.info-page ul li {
-    margin-bottom: 5px;
-    color: #333;
+
+.newsletter-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #000000;
 }
 
-/* === Updated Team Section === */
+/* Inline form layout */
+.newsletter-section .mc-field-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
 
+.newsletter-section .mc-field-group label {
+    flex: 0 0 auto;
+    font-weight: bold;
+    color: #000000; /* ✅ Force label text to black */
+}
+
+.newsletter-section input[type="email"] {
+    flex: 1 1 auto;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #000000;
+}
+
+.newsletter-section .button {
+    flex: 0 0 auto;
+    background: black;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.newsletter-section .button:hover {
+    opacity: 0.85;
+}
+
+/* Team grid */
 .team-section {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 30px;
     margin-top: 30px;
-    align-items: start;
-}
-
-.team-member {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.team-member img {
-    width: 100%;
-    max-height: 300px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
-
-.team-member .name {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.team-member .job-title {
-    font-style: italic;
-    color: #777;
-    margin-bottom: 5px;
-}
-
-.team-member .description {
-    font-size: 0.9em;
-    color: #555;
 }
 
 
-.contact-form {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 20px;
-    background: #fafafa;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-}
-
-.contact-form .form-group {
-    margin-bottom: 20px;
-}
-
-.contact-form label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #333;
-}
-
-.contact-form input,
-.contact-form textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-family: inherit;
-    font-size: 16px;
-    box-sizing: border-box;
-}
-
-.contact-form input:focus,
-.contact-form textarea:focus {
-    outline: none;
-    border-color: #999;
-}
-
-.contact-form .button {
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.contact-form .button:hover {
-    background-color: #555;
-}
-
-
-.contact-form select {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-family: inherit;
-    box-sizing: border-box;
-}
-.site-footer {
-    background: #f2f2f2;
-    padding: 60px 20px;
-    margin-top: 80px;
-    color: #111;
-}
-
-.site-footer .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: left;
-}
-
-/* Footer inner container with vertical stacking */
-.footer-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-}
-
-/* Centered social icons above the form */
-.footer-socials {
-    display: flex;
+/* =======================
+   WHAT’S ON – SMOOVIE STYLE
+   ======================= */
+.poster-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
     justify-content: center;
-    gap: 20px;
-    margin-bottom: 20px;
+    padding: 1rem 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto 2.5rem;
 }
 
-.footer-socials img {
-    width: 50px;
-    height: 50px;
-    filter: brightness(0); /* black */
+.poster-tile {
+    text-decoration: none;
+    display: block;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #eee;
+    transition: transform 0.25s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
 }
 
-/* Mailchimp form */
-#mc_embed_signup {
+.poster-tile:hover {
+    transform: scale(1.04);
+}
+
+.poster-image {
     width: 100%;
-    max-width: 500px;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    display: block;
 }
 
-#mc_embed_signup input[type="email"] {
-    padding: 12px;
+.poster-placeholder {
+    aspect-ratio: 2 / 3;
     width: 100%;
-    font-size: 16px;
-    border-radius: 4px;
-    border: none;
-    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ddd;
+    color: #333;
+    font-weight: 600;
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 12px;
 }
 
-#mc_embed_signup .button {
-    background-color: white;
+/* Empty state */
+.no-projects-message {
+    font-size: 1.1rem;
+    color: #666;
+    padding: 2rem 1rem;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+    .poster-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0.75rem;
+    }
+
+    .poster-tile {
+        border-radius: 14px;
+    }
+
+    .poster-image {
+        border-radius: 14px;
+    }
+}
+
+/* MODAL */
+.film-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 6rem auto;
+    padding: 1.5rem 0;
+    border-radius: 8px;
+    max-width: 960px;
+    position: relative;
+    animation: slideUp 0.4s ease-out;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.close-button {
+    position: absolute;
+    top: 0px;
+    right: -5px;
+    font-size: 3rem;
+    font-weight: 800;
     color: #111;
+    background: transparent;
     border: none;
-    padding: 12px 20px;
-    font-weight: bold;
-    border-radius: 4px;
     cursor: pointer;
+    line-height: 1;
+    padding: 0.5rem 0.75rem;
+    z-index: 10;
 }
 
-#mc_embed_signup .button:hover {
-    background-color: #ddd;
+.close-button:hover {
+    color: #000;
+    transform: scale(1.1);
 }
 
-#mc_embed_signup h2,
-#mc_embed_signup label,
-#mc_embed_signup p {
-    color: #111 !important;
+/* === PROJECT MODAL DETAIL === */
+.project-detail-container {
+    max-width: 880px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    animation: fadeIn 0.3s ease-out;
+    padding-bottom: 2rem;
 }
 
+.banner-container {
+    width: 100%;
+    overflow: hidden;
+}
+
+.banner-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    margin-top: 2rem;
+    border-radius: 8px;
+}
+
+.project-details {
+    padding: 1.5rem;
+}
+
+.project-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.project-description {
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.info-section h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.4rem;
+    color: #111;
+}
+
+.info-section p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+.link-button-wrapper {
+    margin-top: 1rem;
+}
+
+.link-button {
+    display: inline-block;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: #fff;
+    border-radius: 6px;
+    transition: transform 0.2s ease, opacity 0.3s ease;
+}
+
+.link-button:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
