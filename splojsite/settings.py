@@ -125,11 +125,19 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
+# === Cloudinary Config ===
+CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME", "dqmh99cik")
+CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY", "346315119299229")
+CLOUDINARY_API_SECRET = os.getenv("CLOUDINARY_API_SECRET", "XLExALDgvrBLAqpVy35nLjfxeGA")
 
+CLOUDINARY_URL = f"cloudinary://{CLOUDINARY_API_KEY}:{CLOUDINARY_API_SECRET}@{CLOUDINARY_CLOUD_NAME}"
+os.environ["CLOUDINARY_URL"] = CLOUDINARY_URL
 
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
+logger.info(f"🌐 Cloudinary configured for: {CLOUDINARY_CLOUD_NAME}")
+logger.info(f"📦 DEFAULT_FILE_STORAGE = {DEFAULT_FILE_STORAGE}")
+logger.info(f"🔑 Cloudinary API Key (partial): {CLOUDINARY_API_KEY[:6]}***")
 
 # === Security headers ===
 if DEBUG:

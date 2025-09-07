@@ -22,7 +22,6 @@ def project_modal(request, slug):
         'button_color': button_color
     })
 
-
 def info(request):
     sections = InfoSection.objects.filter(project__isnull=True).order_by('id')
     return render(request, 'main/info.html', {

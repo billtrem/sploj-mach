@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 from .models import Project, InfoSection
 
 
@@ -13,7 +14,7 @@ class ProjectAdmin(admin.ModelAdmin):
         (None, {
             'fields': ('title', 'slug', 'description')
         }),
-        ('Images', {
+        ('Images (Stored on Cloudinary)', {
             'fields': ('poster', 'horizontal_image')
         }),
         ('Video', {
@@ -27,13 +28,17 @@ class ProjectAdmin(admin.ModelAdmin):
             'classes': ('collapse',),
         }),
     )
-    readonly_fields = ('created_at',)
+    readonly_fields = ('created_at', 'poster_preview')
 
     def poster_preview(self, obj):
-        if obj.poster:
-            return f'<img src="{obj.poster.url}" width="50" height="75" style="object-fit:cover; border-radius:4px;" />'
+        """Show a small preview of the poster in admin list."""
+        if obj.poster and hasattr(obj.poster, 'url'):
+            return mark_safe(
+                f'<img src="{obj.poster.url}" width="50" height="75" '
+                f'style="object-fit:cover; border-radius:4px;" />'
+            )
         return "—"
-    poster_preview.allow_tags = True
+
     poster_preview.short_description = 'Poster'
 
 

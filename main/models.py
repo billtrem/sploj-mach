@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from cloudinary_storage.storage import MediaCloudinaryStorage
 
 
 class Project(models.Model):
@@ -13,14 +14,16 @@ class Project(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField(blank=True)
 
-    # Images
+    # Images - Force Cloudinary storage
     poster = models.ImageField(
+        storage=MediaCloudinaryStorage(),
         upload_to='projects/posters/',
         blank=True,
         null=True,
         help_text="Vertical poster used on the What's On page."
     )
     horizontal_image = models.ImageField(
+        storage=MediaCloudinaryStorage(),
         upload_to='projects/horizontal/',
         blank=True,
         null=True,
@@ -35,7 +38,7 @@ class Project(models.Model):
     link_label = models.CharField(
         max_length=20,
         choices=LINK_LABEL_CHOICES,
-        default='learn',  # 👈 Always defaults to Learn More
+        default='learn',
         blank=True
     )
 
