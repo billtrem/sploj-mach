@@ -58,11 +58,8 @@ class InfoSectionAdmin(admin.ModelAdmin):
             'classes': ('collapse',),
         }),
         ('Links (only if "Is links section" is checked)', {
-            'fields': (
-                ('link_1_label', 'link_1_url'),
-                ('link_2_label', 'link_2_url'),
-                ('link_3_label', 'link_3_url'),
-                ('link_4_label', 'link_4_url'),
+            'fields': tuple(
+                (f'link_{i}_label', f'link_{i}_url') for i in range(1, 11)
             ),
         }),
         ('Funder Logos', {

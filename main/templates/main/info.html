@@ -31,18 +31,9 @@
 
             {% if section.is_links_section %}
                 <ul>
-                    {% if section.link_1_label and section.link_1_url %}
-                        <li><a href="{{ section.link_1_url }}" target="_blank">{{ section.link_1_label }}</a></li>
-                    {% endif %}
-                    {% if section.link_2_label and section.link_2_url %}
-                        <li><a href="{{ section.link_2_url }}" target="_blank">{{ section.link_2_label }}</a></li>
-                    {% endif %}
-                    {% if section.link_3_label and section.link_3_url %}
-                        <li><a href="{{ section.link_3_url }}" target="_blank">{{ section.link_3_label }}</a></li>
-                    {% endif %}
-                    {% if section.link_4_label and section.link_4_url %}
-                        <li><a href="{{ section.link_4_url }}" target="_blank">{{ section.link_4_label }}</a></li>
-                    {% endif %}
+                    {% for link in section.get_links %}
+                        <li><a href="{{ link.url }}" target="_blank">{{ link.label }}</a></li>
+                    {% endfor %}
                 </ul>
             {% endif %}
 

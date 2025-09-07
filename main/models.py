@@ -93,43 +93,27 @@ class InfoSection(models.Model):
     )
 
     # Carousel images (up to 20)
-    carousel_image_1 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_2 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_3 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_4 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_5 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_6 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_7 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_8 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_9 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_10 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_11 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_12 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_13 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_14 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_15 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_16 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_17 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_18 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_19 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
-    carousel_image_20 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    for i in range(1, 21):
+        locals()[f'carousel_image_{i}'] = models.ImageField(
+            storage=MediaCloudinaryStorage(),
+            upload_to='info/sections/',
+            blank=True,
+            null=True
+        )
+    del i
 
     is_links_section = models.BooleanField(
         default=False,
         help_text="Check if this section should display as a list of links"
     )
 
-    # Optional links
-    link_1_label = models.CharField(max_length=200, blank=True)
-    link_1_url = models.URLField(blank=True)
-    link_2_label = models.CharField(max_length=200, blank=True)
-    link_2_url = models.URLField(blank=True)
-    link_3_label = models.CharField(max_length=200, blank=True)
-    link_3_url = models.URLField(blank=True)
-    link_4_label = models.CharField(max_length=200, blank=True)
-    link_4_url = models.URLField(blank=True)
+    # Optional links (up to 10)
+    for i in range(1, 11):
+        locals()[f'link_{i}_label'] = models.CharField(max_length=200, blank=True)
+        locals()[f'link_{i}_url'] = models.URLField(blank=True)
+    del i
 
-    # Funders logos inside the same section
+    # Funders logos
     funder_logo_1 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/funders/', blank=True, null=True)
     funder_logo_2 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/funders/', blank=True, null=True)
     funder_logo_3 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/funders/', blank=True, null=True)
@@ -137,14 +121,15 @@ class InfoSection(models.Model):
 
     def get_carousel_images(self):
         """Return all non-empty carousel images as a list."""
-        images = []
-        for i in range(1, 21):
-            img = getattr(self, f'carousel_image_{i}')
-            if img:
-                images.append(img)
-        return images
+        return [getattr(self, f'carousel_image_{i}') for i in range(1, 21) if getattr(self, f'carousel_image_{i}')]
+
+    def get_links(self):
+        """Return all non-empty link labels/URLs as a list of dicts."""
+        return [
+            {'label': getattr(self, f'link_{i}_label'), 'url': getattr(self, f'link_{i}_url')}
+            for i in range(1, 11)
+            if getattr(self, f'link_{i}_label') and getattr(self, f'link_{i}_url')
+        ]
 
     def __str__(self):
-        if self.project:
-            return f"{self.title} – {self.project.title}"
-        return self.title
+        return f"{self.title} – {self.project.title}" if self.project else self.title
