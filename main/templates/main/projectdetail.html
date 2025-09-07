@@ -36,7 +36,17 @@
            target="_blank"
            class="link-button"
            style="background-color: black;">
-          {{ project.get_link_label_display|default:"Learn More" }}
+           
+          {% if project.link_label == 'book' %}
+            Book Now / Archebwch Nawr
+          {% elif project.link_label == 'signup' %}
+            Sign Up / Cofrestrwch
+          {% elif project.link_label == 'learn' %}
+            Learn More / Darganfod Mwy
+          {% else %}
+            {{ project.get_link_label_display }} / Darganfod Mwy
+          {% endif %}
+          
         </a>
       </div>
     {% endif %}

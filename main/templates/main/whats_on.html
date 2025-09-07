@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 {% load static %}
 
-{% block title %}What’s On – Sploj{% endblock %}
+{% block title %}What’s On / Beth Sy'n Mlaen – Sploj{% endblock %}
 
 {% block content %}
 <div class="whats-on-container">
@@ -15,7 +15,10 @@
                 {% endif %}
             </div>
         {% empty %}
-            <p class="no-films-message">No projects yet. Check back soon!</p>
+            <p class="no-films-message">
+                No projects yet / Dim prosiectau eto. 
+                Check back soon / Dewch yn ôl yn fuan!
+            </p>
         {% endfor %}
     </div>
 </div>
@@ -23,7 +26,7 @@
 <!-- ✅ Modal -->
 <div id="projectModal" class="film-modal" style="display:none;">
     <div class="modal-content">
-        <button class="close-button" type="button" aria-label="Close modal" onclick="closeProjectModal()">
+        <button class="close-button" type="button" aria-label="Close modal / Cau modalen" onclick="closeProjectModal()">
             &times;
         </button>
         <div id="modal-project-detail-content"></div>
@@ -49,7 +52,7 @@ function openProjectModal(slug) {
             console.log("Modal content loaded successfully");
         })
         .catch(err => {
-            console.error('❌ Error loading project modal:', err);
+            console.error('❌ Error loading project modal / Gwall wrth lwytho modalen prosiect:', err);
         });
 }
 

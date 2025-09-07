@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 {% load static %}
 
-{% block title %}Info – Sploj{% endblock %}
+{% block title %}Info / Gwybodaeth – Sploj{% endblock %}
 
 {% block content %}
 
@@ -19,8 +19,14 @@
 
 <!-- Contact details -->
 <div class="contact-details" style="text-align: center; margin: 2rem 0;">
-    <p><strong>Address:</strong> Unit 2 Bank Lane, Machynlleth, Powys, SY20 8JB</p>
-    <p><strong>Email:</strong> <a href="mailto:splojmach@gmail.com">splojmach@gmail.com</a></p>
+    <p><strong>Address / Cyfeiriad:</strong> Unit 2 Bank Lane, Machynlleth, Powys, SY20 8JB</p>
+    <p><strong>Email / E-bost:</strong> <a href="mailto:splojmach@gmail.com">splojmach@gmail.com</a></p>
+</div>
+
+<!-- Partner Logos -->
+<div class="partner-logos" style="text-align: center; margin: 2rem 0;">
+    <img src="{% static 'main/images/lottery_logo.jpg' %}" alt="Lottery Logo / Logo'r Loteri" style="height: 60px; margin: 0 15px;">
+    <img src="{% static 'main/images/pavo_logo.jpg' %}" alt="PAVO Social Value Forum Logo / Logo Fforwm Gwerth Cymdeithasol PAVO" style="height: 60px; margin: 0 15px;">
 </div>
 
 {% endblock %}

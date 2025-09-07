@@ -15,8 +15,8 @@
             <button class="hamburger" onclick="toggleMenu()">☰</button>
             <div class="nav-links" id="navLinks">
                 <span class="nav-close" onclick="toggleMenu()">×</span>
-                <a href="{% url 'whats_on' %}">What’s On</a>
-                <a href="{% url 'info' %}">Info</a>
+                <a href="{% url 'whats_on' %}">What’s On / Beth Sy'n Mlaen</a>
+                <a href="{% url 'info' %}">Info / Gwybodaeth</a>
             </div>
         </div>
     </nav>
@@ -45,14 +45,14 @@
                 <!-- Newsletter Signup -->
                 <div id="mc_embed_signup" class="newsletter-section" style="margin: 0;">
                     <form id="newsletter-form">
-                        <h2>Subscribe to the Sploj Newsletter</h2>
+                        <h2>Subscribe to the Sploj Newsletter / Tanysgrifio i Gylchlythyr Sploj</h2>
                         <div class="mc-field-group" id="newsletter-fields" style="display: flex; gap: 10px; align-items: center;">
-                            <label for="mce-EMAIL">Email Address <span class="asterisk">*</span></label>
+                            <label for="mce-EMAIL">Email Address / Cyfeiriad E-bost <span class="asterisk">*</span></label>
                             <input type="email" name="EMAIL" id="mce-EMAIL" required>
-                            <input type="submit" class="button" value="Subscribe">
+                            <input type="submit" class="button" value="Subscribe / Tanysgrifio">
                         </div>
                         <div id="newsletter-message" style="display:none; font-weight:bold; color:green;">
-                            ✅ Thanks for subscribing!
+                            ✅ Thanks for subscribing! / Diolch am danysgrifio!
                         </div>
                     </form>
                 </div>
@@ -61,7 +61,7 @@
         </div>
     </footer>
 
-        <script>
+    <script>
         function toggleMenu() {
             document.getElementById("navLinks").classList.toggle("active");
         }
@@ -78,7 +78,7 @@
                     document.getElementById('newsletter-fields').style.display = 'none';
                     document.getElementById('newsletter-message').style.display = 'block';
                 } else {
-                    alert("There was an issue: " + resp.msg);
+                    alert("There was an issue / Bu problem: " + resp.msg);
                 }
                 delete window[callbackName];
             };
@@ -91,6 +91,5 @@
     </script>
 
     {% block extra_js %}{% endblock %}
-
 </body>
 </html>
