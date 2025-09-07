@@ -31,18 +31,39 @@ class ProjectAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at', 'poster_preview')
 
     def poster_preview(self, obj):
-        """Show a small preview of the poster in admin list."""
         if obj.poster and hasattr(obj.poster, 'url'):
             return mark_safe(
                 f'<img src="{obj.poster.url}" width="50" height="75" '
                 f'style="object-fit:cover; border-radius:4px;" />'
             )
         return "—"
-
     poster_preview.short_description = 'Poster'
 
 
 @admin.register(InfoSection)
 class InfoSectionAdmin(admin.ModelAdmin):
-    list_display = ('title', 'project')
+    list_display = ('title', 'project', 'is_links_section')
     search_fields = ('title', 'content')
+    list_filter = ('is_links_section',)
+
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'project', 'content', 'image', 'is_links_section')
+        }),
+        ('Links (only if "Is links section" is checked)', {
+            'fields': (
+                ('link_1_label', 'link_1_url'),
+                ('link_2_label', 'link_2_url'),
+                ('link_3_label', 'link_3_url'),
+                ('link_4_label', 'link_4_url'),
+            ),
+        }),
+        ('Funder Logos', {
+            'fields': (
+                'funder_logo_1',
+                'funder_logo_2',
+                'funder_logo_3',
+                'funder_logo_4',
+            ),
+        }),
+    )

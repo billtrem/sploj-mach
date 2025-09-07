@@ -30,10 +30,8 @@ class Project(models.Model):
         help_text="Horizontal image or banner used in the modal."
     )
 
-    # Optional embedded video
     video_embed_code = models.TextField(blank=True, help_text="Embed code for a video/trailer.")
 
-    # Link
     link = models.URLField(blank=True, help_text="External link for booking, signup, etc.")
     link_label = models.CharField(
         max_length=20,
@@ -42,9 +40,7 @@ class Project(models.Model):
         blank=True
     )
 
-    # Styling
     color = models.CharField(max_length=7, default='#000000', help_text="Hex color for modal accents.")
-
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
@@ -63,7 +59,7 @@ class Project(models.Model):
 
 
 class InfoSection(models.Model):
-    """General info section for a project or for Sploj overall."""
+    """Info section for a project or Sploj overall."""
     project = models.ForeignKey(
         Project,
         related_name='info_sections',
@@ -73,6 +69,33 @@ class InfoSection(models.Model):
     )
     title = models.CharField(max_length=200)
     content = models.TextField()
+    image = models.ImageField(
+        storage=MediaCloudinaryStorage(),
+        upload_to='info/sections/',
+        blank=True,
+        null=True,
+        help_text="Optional image for this section (e.g., header photo)"
+    )
+    is_links_section = models.BooleanField(
+        default=False,
+        help_text="Check if this section should display as a list of links"
+    )
+
+    # Optional links if this is a link section
+    link_1_label = models.CharField(max_length=200, blank=True)
+    link_1_url = models.URLField(blank=True)
+    link_2_label = models.CharField(max_length=200, blank=True)
+    link_2_url = models.URLField(blank=True)
+    link_3_label = models.CharField(max_length=200, blank=True)
+    link_3_url = models.URLField(blank=True)
+    link_4_label = models.CharField(max_length=200, blank=True)
+    link_4_url = models.URLField(blank=True)
+
+    # Funders logos inside the same section
+    funder_logo_1 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/funders/', blank=True, null=True)
+    funder_logo_2 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/funders/', blank=True, null=True)
+    funder_logo_3 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/funders/', blank=True, null=True)
+    funder_logo_4 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/funders/', blank=True, null=True)
 
     def __str__(self):
         if self.project:

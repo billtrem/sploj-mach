@@ -4,14 +4,50 @@
 {% block title %}Info / Gwybodaeth – Sploj{% endblock %}
 
 {% block content %}
-
-<!-- Info Sections -->
 {% if sections %}
 <div class="info-sections">
     {% for section in sections %}
         <div class="info-section">
+            {% if section.image %}
+                <img src="{{ section.image.url }}" alt="{{ section.title }}" style="max-width:100%; height:auto;">
+            {% endif %}
+
             <h2>{{ section.title }}</h2>
             <p>{{ section.content|linebreaks }}</p>
+
+            {% if section.is_links_section %}
+                <ul>
+                    {% if section.link_1_label and section.link_1_url %}
+                        <li><a href="{{ section.link_1_url }}" target="_blank">{{ section.link_1_label }}</a></li>
+                    {% endif %}
+                    {% if section.link_2_label and section.link_2_url %}
+                        <li><a href="{{ section.link_2_url }}" target="_blank">{{ section.link_2_label }}</a></li>
+                    {% endif %}
+                    {% if section.link_3_label and section.link_3_url %}
+                        <li><a href="{{ section.link_3_url }}" target="_blank">{{ section.link_3_label }}</a></li>
+                    {% endif %}
+                    {% if section.link_4_label and section.link_4_url %}
+                        <li><a href="{{ section.link_4_url }}" target="_blank">{{ section.link_4_label }}</a></li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+
+            {% if section.funder_logo_1 or section.funder_logo_2 or section.funder_logo_3 or section.funder_logo_4 %}
+            <div class="partner-logos" style="text-align: center; margin: 2rem 0;">
+                {% if section.funder_logo_1 %}
+                    <img src="{{ section.funder_logo_1.url }}" alt="" style="height: 60px; margin: 0 15px;">
+                {% endif %}
+                {% if section.funder_logo_2 %}
+                    <img src="{{ section.funder_logo_2.url }}" alt="" style="height: 60px; margin: 0 15px;">
+                {% endif %}
+                {% if section.funder_logo_3 %}
+                    <img src="{{ section.funder_logo_3.url }}" alt="" style="height: 60px; margin: 0 15px;">
+                {% endif %}
+                {% if section.funder_logo_4 %}
+                    <img src="{{ section.funder_logo_4.url }}" alt="" style="height: 60px; margin: 0 15px;">
+                {% endif %}
+            </div>
+            {% endif %}
         </div>
     {% endfor %}
 </div>
@@ -22,11 +58,4 @@
     <p><strong>Address / Cyfeiriad:</strong> Unit 2 Bank Lane, Machynlleth, Powys, SY20 8JB</p>
     <p><strong>Email / E-bost:</strong> <a href="mailto:splojmach@gmail.com">splojmach@gmail.com</a></p>
 </div>
-
-<!-- Partner Logos -->
-<div class="partner-logos" style="text-align: center; margin: 2rem 0;">
-    <img src="{% static 'main/images/lottery_logo.jpg' %}" alt="Lottery Logo / Logo'r Loteri" style="height: 60px; margin: 0 15px;">
-    <img src="{% static 'main/images/pavo_logo.jpg' %}" alt="PAVO Social Value Forum Logo / Logo Fforwm Gwerth Cymdeithasol PAVO" style="height: 60px; margin: 0 15px;">
-</div>
-
 {% endblock %}
