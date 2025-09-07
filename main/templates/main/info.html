@@ -8,7 +8,21 @@
 <div class="info-sections">
     {% for section in sections %}
         <div class="info-section">
-            {% if section.image %}
+
+            {# Carousel if section has extra images #}
+            {% if section.get_carousel_images %}
+                <div class="carousel" id="carousel-{{ forloop.counter }}">
+                    <div class="carousel-track">
+                        {% for image in section.get_carousel_images %}
+                            <div class="carousel-slide">
+                                <img src="{{ image.url }}" alt="{{ section.title }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-btn prev" data-carousel="{{ forloop.counter }}">&#10094;</button>
+                    <button class="carousel-btn next" data-carousel="{{ forloop.counter }}">&#10095;</button>
+                </div>
+            {% elif section.image %}
                 <img src="{{ section.image.url }}" alt="{{ section.title }}" style="max-width:100%; height:auto;">
             {% endif %}
 
@@ -58,4 +72,29 @@
     <p><strong>Address / Cyfeiriad:</strong> Unit 2 Bank Lane, Machynlleth, Powys, SY20 8JB</p>
     <p><strong>Email / E-bost:</strong> <a href="mailto:splojmach@gmail.com">splojmach@gmail.com</a></p>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.carousel-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.carousel;
+            const direction = btn.classList.contains('prev') ? -1 : 1;
+            moveCarousel(id, direction);
+        });
+    });
+});
+
+function moveCarousel(id, direction) {
+    const carousel = document.getElementById('carousel-' + id);
+    const track = carousel.querySelector('.carousel-track');
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    if (slides.length > 0) {
+        const slideWidth = slides[0].clientWidth;
+        track.scrollBy({
+            left: direction * slideWidth,
+            behavior: 'smooth'
+        });
+    }
+}
+</script>
 {% endblock %}

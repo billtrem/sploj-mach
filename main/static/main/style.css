@@ -512,3 +512,72 @@ nav .dropdown-content a {
         transform: translateY(0);
     }
 }
+
+
+/* === CAROUSEL === */
+.carousel {
+    position: relative;
+    max-width: 100%;
+    margin: 1.5rem auto;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #f9f9f9;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.4s ease-in-out;
+    scroll-behavior: smooth;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.carousel-slide {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    text-align: center;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+/* Navigation buttons */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0,0,0,0.4);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1.5rem;
+    z-index: 2;
+    transition: background-color 0.3s ease;
+}
+
+.carousel-btn:hover {
+    background-color: rgba(0,0,0,0.6);
+}
+
+.carousel-btn.prev {
+    left: 10px;
+}
+
+.carousel-btn.next {
+    right: 10px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+    .carousel-btn {
+        font-size: 1.2rem;
+        padding: 6px 10px;
+    }
+}

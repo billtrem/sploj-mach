@@ -37,6 +37,14 @@ def info(request):
         if first_with_image:
             top_image = first_with_image.image
 
+    # Prepare carousel images for each section
+    for section in sections:
+        section.carousel_images = [
+            getattr(section, f'carousel_image_{i}')
+            for i in range(1, 21)
+            if getattr(section, f'carousel_image_{i}')
+        ]
+
     # All important links sections
     link_sections = [s for s in sections if s.is_links_section]
 

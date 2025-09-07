@@ -53,6 +53,10 @@ class InfoSectionAdmin(admin.ModelAdmin):
         (None, {
             'fields': ('title', 'project', 'content', 'image', 'is_links_section')
         }),
+        ('Carousel Images (Optional – up to 20)', {
+            'fields': tuple(f'carousel_image_{i}' for i in range(1, 21)),
+            'classes': ('collapse',),
+        }),
         ('Links (only if "Is links section" is checked)', {
             'fields': (
                 ('link_1_label', 'link_1_url'),

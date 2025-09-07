@@ -82,19 +82,44 @@ class InfoSection(models.Model):
     )
     title = models.CharField(max_length=200)
     content = models.TextField()
+
+    # Main image
     image = models.ImageField(
         storage=MediaCloudinaryStorage(),
         upload_to='info/sections/',
         blank=True,
         null=True,
-        help_text="Optional image for this section (e.g., header photo)"
+        help_text="Optional main image for this section"
     )
+
+    # Carousel images (up to 20)
+    carousel_image_1 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_2 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_3 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_4 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_5 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_6 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_7 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_8 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_9 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_10 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_11 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_12 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_13 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_14 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_15 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_16 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_17 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_18 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_19 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+    carousel_image_20 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/sections/', blank=True, null=True)
+
     is_links_section = models.BooleanField(
         default=False,
         help_text="Check if this section should display as a list of links"
     )
 
-    # Optional links if this is a link section
+    # Optional links
     link_1_label = models.CharField(max_length=200, blank=True)
     link_1_url = models.URLField(blank=True)
     link_2_label = models.CharField(max_length=200, blank=True)
@@ -109,6 +134,15 @@ class InfoSection(models.Model):
     funder_logo_2 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/funders/', blank=True, null=True)
     funder_logo_3 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/funders/', blank=True, null=True)
     funder_logo_4 = models.ImageField(storage=MediaCloudinaryStorage(), upload_to='info/funders/', blank=True, null=True)
+
+    def get_carousel_images(self):
+        """Return all non-empty carousel images as a list."""
+        images = []
+        for i in range(1, 21):
+            img = getattr(self, f'carousel_image_{i}')
+            if img:
+                images.append(img)
+        return images
 
     def __str__(self):
         if self.project:
