@@ -5,7 +5,7 @@ from .models import Project, InfoSection
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('title', 'link_label', 'link', 'created_at', 'poster_preview')
+    list_display = ('title', 'link_label', 'link', 'volunteer_label', 'volunteer_link', 'created_at', 'poster_preview')
     search_fields = ('title', 'description')
     list_filter = ('link_label', 'created_at')
     prepopulated_fields = {'slug': ('title',)}
@@ -20,8 +20,11 @@ class ProjectAdmin(admin.ModelAdmin):
         ('Video', {
             'fields': ('video_embed_code',)
         }),
-        ('Link Settings', {
+        ('Main Button Settings', {
             'fields': ('link', 'link_label', 'color')
+        }),
+        ('Volunteer Button Settings', {
+            'fields': ('volunteer_link', 'volunteer_label')
         }),
         ('Timestamps', {
             'fields': ('created_at',),

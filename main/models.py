@@ -32,12 +32,25 @@ class Project(models.Model):
 
     video_embed_code = models.TextField(blank=True, help_text="Embed code for a video/trailer.")
 
+    # Main public button
     link = models.URLField(blank=True, help_text="External link for booking, signup, etc.")
     link_label = models.CharField(
         max_length=20,
         choices=LINK_LABEL_CHOICES,
         default='learn',
         blank=True
+    )
+
+    # Volunteer sign-up button
+    volunteer_link = models.URLField(
+        blank=True,
+        help_text="Link to volunteer sign-up form (Google Form or internal page)"
+    )
+    volunteer_label = models.CharField(
+        max_length=50,
+        default='Sign Up',
+        blank=True,
+        help_text="Label for the volunteer button (default: 'Sign Up')"
     )
 
     color = models.CharField(max_length=7, default='#000000', help_text="Hex color for modal accents.")

@@ -21,7 +21,9 @@ def project_modal(request, slug):
     return render(request, 'main/projectdetail.html', {
         'project': project,
         'sections': sections,
-        'button_color': button_color
+        'button_color': button_color,
+        'volunteer_link': project.volunteer_link,
+        'volunteer_label': project.volunteer_label,
     })
 
 

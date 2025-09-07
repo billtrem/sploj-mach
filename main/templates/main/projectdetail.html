@@ -30,13 +30,13 @@
       </div>
     {% endif %}
 
-    {% if project.link %}
-      <div class="link-button-wrapper">
+    <div class="link-button-wrapper" style="display: flex; gap: 10px; flex-wrap: wrap;">
+
+      {% if project.link %}
         <a href="{{ project.link }}"
            target="_blank"
            class="link-button"
            style="background-color: black;">
-           
           {% if project.link_label == 'book' %}
             Book Now / Archebwch Nawr
           {% elif project.link_label == 'signup' %}
@@ -46,10 +46,23 @@
           {% else %}
             {{ project.get_link_label_display }} / Darganfod Mwy
           {% endif %}
-          
         </a>
-      </div>
-    {% endif %}
+      {% endif %}
+
+      {% if project.volunteer_link %}
+        <a href="{{ project.volunteer_link }}"
+           target="_blank"
+           class="link-button"
+           style="background-color: #555;">
+          {% if project.volunteer_label %}
+            {{ project.volunteer_label }}
+          {% else %}
+            Volunteer Sign Up / Cofrestru Fel Gwirfoddolwr
+          {% endif %}
+        </a>
+      {% endif %}
+
+    </div>
   </div>
 
 </div>
